@@ -3,48 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project A - Luxury Catalog</title>
+    <title>COCO HUA HIN - PROJECT A CATALOG</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>body { font-family: 'Kanit', sans-serif; }</style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <header class="bg-white shadow-sm py-8 text-center">
-        <h1 class="text-3xl font-bold text-gray-800 uppercase tracking-widest">COCO HUA HIN <span class="text-blue-600">PROJECT A</span></h1>
+<body class="bg-slate-50 min-h-screen font-['Kanit']">
+    <header class="bg-white shadow-sm sticky top-0 z-50 py-8 border-b-4 border-blue-600">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl font-bold text-slate-800 uppercase tracking-tighter">CoCo Hua Hin <span class="text-blue-600">Project A</span></h1>
+            <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mt-2">Luxury Home Collection</p>
+        </div>
     </header>
 
     <main class="container mx-auto px-4 py-12">
-        <div id="loading" class="text-center py-20 text-gray-400 animate-pulse">กำลังโหลดข้อมูลโครงการ A...</div>
-        <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        <div id="loading" class="text-center py-24 text-slate-400 animate-pulse text-lg font-bold italic">
+            <i class="fa-solid fa-house-chimney animate-bounce mr-2"></i> กำลังดึงรายการบ้านในโครงการ CoCo...
+        </div>
+        
+        <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"></div>
     </main>
 
     <script>
+        // 🛑 ใส่ URL Apps Script ของคุณที่นี่
         const API_URL = "https://script.google.com/macros/s/AKfycbxO40_bOBK66N22L6AWzBWaagzNkxSXs4KuvY5hRZ3vE4miazrpn7iNttlgmtGERmXV/exec"; 
+        const TARGET_PROJECT = "Project_A"; // ล็อกให้ดึงเฉพาะข้อมูลโครงการ A
 
         async function init() {
+            const grid = document.getElementById('grid');
+            const loading = document.getElementById('loading');
+            
             try {
-                const res = await fetch(`${API_URL}?action=getPublicCatalog&project=Project_A`);
-                const json = await res.json();
-                if (json.status === "success") render(json.data);
-            } catch (e) { document.getElementById('loading').innerText = "⚠️ ไม่สามารถโหลดข้อมูลได้"; }
+                // เรียกข้อมูลโดยระบุ project=Project_A แทนคำว่า all
+                const response = await fetch(`${API_URL}?action=getPublicCatalog&project=${TARGET_PROJECT}`); 
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    loading.style.display = 'none';
+                    render(result.data);
+                }
+            } catch (e) {
+                loading.innerHTML = "<div class='text-red-500 font-bold'>❌ ไม่สามารถเชื่อมต่อฐานข้อมูล CoCo ได้</div>";
+            }
         }
 
         function render(items) {
             const grid = document.getElementById('grid');
-            document.getElementById('loading').style.display = 'none';
-            if (items.length === 0) { grid.innerHTML = "<p class='col-span-full text-center'>ยังไม่มีบ้านที่ออนไลน์ในขณะนี้</p>"; return; }
+            if (items.length === 0) {
+                grid.innerHTML = "<p class='col-span-full text-center py-24 text-slate-400 font-bold italic text-xl'>ขออภัย ยังไม่มีบ้านที่พร้อมแสดงผลในขณะนี้</p>";
+                return;
+            }
+            
             grid.innerHTML = items.map(i => `
-                <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all">
-                    <img src="${i.Thumbnail_Image}" class="w-full h-64 object-cover">
-                    <div class="p-6">
-                        <span class="text-xs font-bold text-blue-500 uppercase">${i.HP_ID}</span>
-                        <h3 class="text-xl font-bold text-gray-800 my-2">${i.ID_NAME}</h3>
-                        <p class="text-2xl font-bold text-blue-600 mb-6">฿${Number(i.Price).toLocaleString()}</p>
-                        <button class="w-full py-4 bg-gray-900 text-white rounded-2xl font-bold">ดูรายละเอียด</button>
+                <div class="bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-slate-100 hover:shadow-2xl transition-all duration-500 group">
+                    <div class="relative overflow-hidden">
+                        <img src="${i.Thumbnail_Image || 'https://via.placeholder.com/600x400?text=CoCo+Project+A'}" class="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute top-6 left-6 bg-blue-600 text-white px-5 py-1.5 rounded-full text-[10px] font-bold shadow-lg uppercase tracking-widest">${i.HP_ID}</div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2 truncate group-hover:text-blue-600 transition-colors">${i.ID_NAME}</h3>
+                        <p class="text-4xl font-bold text-slate-900 mb-8 tracking-tighter border-b pb-6">฿${Number(i.Price || 0).toLocaleString()}</p>
+                        <button class="w-full py-5 bg-slate-900 text-white rounded-[1.5rem] font-bold text-xs uppercase tracking-[0.2em] hover:bg-blue-600 transition-all shadow-xl active:scale-95">ดูรายละเอียด</button>
                     </div>
                 </div>
             `).join('');
         }
+
         init();
     </script>
 </body>
