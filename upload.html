@@ -3,101 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agent Smart System - Upload Project A</title>
+    <title>PROJECT A CONTROL PANEL - AGENT SMART SYSTEM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>body { font-family: 'Kanit', sans-serif; }</style>
 </head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-xl bg-white rounded-3xl shadow-xl p-8">
-        <div class="text-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800 uppercase">Agent Smart System</h1>
-            <p class="text-blue-600 font-bold">PROJECT A CONTROL PANEL</p>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-3xl bg-white rounded-[3rem] shadow-2xl p-8 md:p-12">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-slate-800 uppercase tracking-tighter">Agent Smart System</h1>
+            <p class="text-blue-600 font-bold text-sm uppercase tracking-widest mt-1">Project A Control Panel</p>
         </div>
         
-        <div class="space-y-4">
-            <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100">
-                <label class="block text-[10px] font-bold text-blue-400 uppercase mb-1">รหัสยูนิตที่ว่างล่าสุด (ค้นหาอัตโนมัติ)</label>
-                <input type="text" id="hpIdInput" readonly value="⏳ กำลังตรวจสอบรหัสว่าง..." 
-                       class="w-full bg-transparent text-blue-700 font-bold text-center text-xl outline-none">
+        <div class="space-y-6">
+            <div id="statusSection" class="p-6 bg-slate-50 rounded-[2rem] border-2 border-dashed border-slate-200 text-center shadow-inner">
+                <span class="text-[10px] font-bold text-slate-400 uppercase block mb-1">รหัสยูนิตที่ว่างล่าสุด (ค้นหาอัตโนมัติ)</span>
+                <input type="text" id="hpIdInput" readonly value="⏳ กำลังเช็คสิทธิ์แก้ไขจาก Master..." class="w-full bg-transparent text-blue-700 font-bold text-2xl text-center outline-none">
             </div>
 
-            <div id="formSection" class="hidden space-y-4 pt-4">
-                <input type="text" id="idName" placeholder="ชื่อยูนิต / หัวข้อประกาศ" class="w-full p-4 bg-gray-50 rounded-2xl outline-none focus:ring-2 ring-blue-400">
+            <div id="formSection" class="hidden space-y-6 pt-6 border-t border-slate-100 animate-fade-in">
+                
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="number" id="price" placeholder="ราคาขาย (บาท)" class="p-4 bg-gray-50 rounded-2xl outline-none">
-                    <input type="text" id="status" placeholder="สถานะ (เช่น พร้อมโอน)" class="p-4 bg-gray-50 rounded-2xl outline-none">
-                </div>
-                <textarea id="description" placeholder="รายละเอียดบ้าน..." class="w-full p-4 bg-gray-50 rounded-2xl h-24 outline-none"></textarea>
-
-                <div class="flex gap-4">
-                    <label class="flex-1 p-4 bg-gray-50 border-2 border-dashed rounded-2xl text-center cursor-pointer hover:bg-gray-100">
-                        <span id="txtThumb" class="text-[10px] font-bold text-gray-400">รูปหน้าปก</span>
-                        <input type="file" id="inThumb" accept="image/*" class="hidden" onchange="updateTxt('thumb')">
+                    <label class="flex flex-col items-center p-6 bg-blue-50 border-2 border-dashed border-blue-200 rounded-[2rem] cursor-pointer hover:bg-blue-100 transition-all">
+                        <i class="fa-solid fa-image text-2xl mb-1 text-blue-600"></i>
+                        <span class="text-[10px] font-bold text-blue-600 uppercase">รูปหน้าปก (1 รูป)</span>
+                        <input type="file" id="inThumb" accept="image/*" class="hidden" onchange="updateLabel('inThumb', 'tLab')">
+                        <span id="tLab" class="text-[9px] text-blue-400 mt-2 italic">ยังไม่ได้เลือก</span>
                     </label>
-                    <label class="flex-1 p-4 bg-gray-50 border-2 border-dashed rounded-2xl text-center cursor-pointer hover:bg-gray-100">
-                        <span id="txtGall" class="text-[10px] font-bold text-gray-400">รูปอัลบั้ม</span>
-                        <input type="file" id="inGall" multiple accept="image/*" class="hidden" onchange="updateTxt('gall')">
+                    <label class="flex flex-col items-center p-6 bg-purple-50 border-2 border-dashed border-purple-200 rounded-[2rem] cursor-pointer hover:bg-purple-100 transition-all">
+                        <i class="fa-solid fa-images text-2xl mb-1 text-purple-600"></i>
+                        <span class="text-[10px] font-bold text-purple-600 uppercase">รูปอัลบั้ม (1-15 รูป)</span>
+                        <input type="file" id="inGall" multiple accept="image/*" class="hidden" onchange="updateLabel('inGall', 'gLab')">
+                        <span id="gLab" class="text-[9px] text-purple-400 mt-2 italic">ยังไม่ได้เลือก</span>
                     </label>
                 </div>
 
-                <button onclick="submitData()" id="btnSubmit" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-bold shadow-lg active:scale-95 transition-all">บันทึกข้อมูลเข้าสู่โปรเจกต์ A</button>
+                <div class="space-y-4">
+                    <input type="text" id="idName" placeholder="ชื่อบ้าน / หัวข้อประกาศ" class="w-full p-5 bg-gray-50 rounded-2xl outline-none shadow-inner">
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <input type="text" id="type" placeholder="Type" class="p-4 bg-gray-50 rounded-xl outline-none text-sm">
+                        <input type="text" id="plot" placeholder="Plot" class="p-4 bg-gray-50 rounded-xl outline-none text-sm">
+                        <input type="number" id="bedrooms" placeholder="Bedrooms" class="p-4 bg-gray-50 rounded-xl outline-none text-sm">
+                        <input type="number" id="bathrooms" placeholder="Bathrooms" class="p-4 bg-gray-50 rounded-xl outline-none text-sm">
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <input type="text" id="landW" placeholder="Land (sq.w)" class="p-4 bg-gray-50 rounded-xl outline-none text-xs">
+                        <input type="text" id="landM" placeholder="Land (sq.m)" class="p-4 bg-gray-50 rounded-xl outline-none text-xs">
+                        <input type="text" id="livingM" placeholder="Living (sq.m)" class="p-4 bg-gray-50 rounded-xl outline-none text-xs">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100">
+                        <label class="text-[10px] font-bold text-blue-400 uppercase mb-1 block ml-2">ราคาเสนอขาย</label>
+                        <input type="number" id="price" placeholder="0" class="w-full p-1 bg-transparent text-2xl font-bold text-blue-700 outline-none">
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block ml-2">สถานะ (ส่งให้ Master ตรวจ)</label>
+                        <select id="sysStatus" class="w-full p-1 bg-transparent font-bold text-slate-600 outline-none cursor-pointer">
+                            <option value="Pending">🟡 Pending (รอลงข้อมูล)</option>
+                            <option value="Live">🟢 Live (ขอออนไลน์ทันที)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <textarea id="desc" placeholder="รายละเอียดเชิงลึกของบ้าน..." class="w-full p-5 bg-gray-50 rounded-2xl h-32 outline-none shadow-inner"></textarea>
+
+                <button onclick="submitData()" id="btnSubmit" class="w-full bg-blue-600 text-white py-6 rounded-[2rem] font-bold uppercase shadow-xl hover:bg-slate-900 transition-all flex justify-center items-center active:scale-95">
+                    <i class="fa-solid fa-cloud-arrow-up mr-3 text-lg"></i> บันทึกข้อมูลเข้าสู่ระบบ Master
+                </button>
             </div>
         </div>
-        <div id="statusBox" class="hidden mt-6 p-4 rounded-2xl text-center text-xs font-bold"></div>
+    </div>
+
+    <div id="popSuccess" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50 p-4 font-['Kanit']">
+        <div class="bg-white rounded-[2.5rem] p-10 max-w-sm w-full text-center shadow-2xl scale-in">
+            <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2 class="text-xl font-bold text-slate-800 mb-2">อัปโหลดสำเร็จ!</h2>
+            <p class="text-slate-500 text-sm mb-8">ข้อมูลถูกส่งไปยังระบบ Master แล้ว <br>กรุณารอการตรวจสอบเพื่อออนไลน์</p>
+            <button onclick="location.reload()" class="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold uppercase">ตกลง</button>
+        </div>
     </div>
 
     <script>
-        // 🛑 สำคัญ: วาง URL ของ Apps Script ที่คุณ Deploy ได้ที่นี่
-        const API_URL = "https://script.google.com/macros/s/AKfycbxO40_bOBK66N22L6AWzBWaagzNkxSXs4KuvY5hRZ3vE4miazrpn7iNttlgmtGERmXV/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbxO40_bOBK66N22L6AWzBWaagzNkxSXs4KuvY5hRZ3vE4miazrpn7iNttlgmtGERmXV/exec"; //
+        const TARGET_PROJECT = "Project_A"; // ล็อกสำหรับโครงการ A
 
         async function init() {
+            const idInput = document.getElementById('hpIdInput');
+            const form = document.getElementById('formSection');
+            
             try {
-                const res = await fetch(`${API_URL}?mode=autoFind&project=Project_A`);
-                const nextID = await res.text();
-                document.getElementById('hpIdInput').value = nextID;
-                if (!nextID.includes("Full")) document.getElementById('formSection').classList.remove('hidden');
-            } catch (e) { document.getElementById('hpIdInput').value = "❌ เชื่อมต่อล้มเหลว"; }
+                // ส่งชื่อโครงการที่ล็อกไว้ไปตรวจสอบ ID
+                const res = await fetch(`${API_URL}?mode=getEditSlot&project=${TARGET_PROJECT}`);
+                const id = await res.text();
+                
+                if (id !== "Locked") {
+                    idInput.value = id;
+                    idInput.parentElement.classList.replace('bg-slate-50', 'bg-green-50');
+                    idInput.parentElement.classList.replace('border-slate-200', 'border-green-200');
+                    form.classList.remove('hidden');
+                    window.currentHpId = id;
+                } else {
+                    idInput.value = "🔒 Slot Full / Locked by Master";
+                    idInput.className = "w-full bg-transparent text-red-500 font-bold text-2xl text-center outline-none";
+                }
+            } catch (e) { idInput.value = "❌ การเชื่อมต่อล้มเหลว"; }
         }
 
-        function updateTxt(type) {
-            const f = document.getElementById(type === 'thumb' ? 'inThumb' : 'inGall').files;
-            document.getElementById(type === 'thumb' ? 'txtThumb' : 'txtGall').innerText = `✅ ตรวจพบ ${f.length} รูป`;
+        function updateLabel(id, lId) {
+            const count = document.getElementById(id).files.length;
+            document.getElementById(lId).innerText = `เลือกแล้ว ${count} ไฟล์`;
         }
 
         async function submitData() {
             const btn = document.getElementById('btnSubmit');
-            const box = document.getElementById('statusBox');
             btn.disabled = true;
-            box.classList.remove('hidden');
-            box.className = "mt-6 p-4 rounded-2xl text-center text-xs bg-blue-50 text-blue-600 animate-pulse";
-            box.innerText = "กำลังอัปโหลดข้อมูล...";
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> กำลังส่งข้อมูล...';
 
             const payload = {
-                project: "Project_A",
-                hpId: document.getElementById('hpIdInput').value,
+                project: TARGET_PROJECT,
+                hpId: window.currentHpId,
                 idName: document.getElementById('idName').value,
                 price: document.getElementById('price').value,
-                description: document.getElementById('description').value,
+                sysStatus: document.getElementById('sysStatus').value,
+                description: document.getElementById('desc').value,
+                // ข้อมูลเพิ่มเติมตามคอลัมน์
+                type: document.getElementById('type').value,
+                plot: document.getElementById('plot').value,
+                bedrooms: document.getElementById('bedrooms').value,
+                bathrooms: document.getElementById('bathrooms').value,
+                landW: document.getElementById('landW').value,
+                landM: document.getElementById('landM').value,
+                livingM: document.getElementById('livingM').value,
                 files: []
             };
 
-            const t = document.getElementById('inThumb').files;
-            const g = document.getElementById('inGall').files;
-
-            if (t.length > 0) payload.files.push({ name: "t.jpg", type: t[0].type, base64: (await toB64(t[0])).split(',')[1], isThumb: true });
-            for (let f of g) payload.files.push({ name: f.name, type: f.type, base64: (await toB64(f)).split(',')[1], isThumb: false });
-
             try {
                 await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-                box.className = "mt-6 p-4 rounded-2xl text-center text-xs bg-green-50 text-green-600";
-                box.innerText = "✅ บันทึกสำเร็จ! ระบบกำลังเริ่มใหม่...";
-                setTimeout(() => location.reload(), 2000);
-            } catch (e) { box.innerText = "❌ ผิดพลาด"; btn.disabled = false; }
+                document.getElementById('popSuccess').classList.replace('hidden', 'flex');
+            } catch (e) { alert("เกิดข้อผิดพลาด"); btn.disabled = false; }
         }
 
-        function toB64(f) { return new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(f); }); }
-        init();
+        window.onload = init;
     </script>
 </body>
 </html>
