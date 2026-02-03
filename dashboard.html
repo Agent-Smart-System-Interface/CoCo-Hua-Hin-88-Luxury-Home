@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COCO - UNIT DASHBOARD</title>
+    <title>COCO - ADMIN DASHBOARD</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: 'Kanit', sans-serif; background: #f8fafc; }
         .dense-row td { padding: 0.5rem 0.4rem !important; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
-        .dense-row th { padding: 0.6rem 0.4rem !important; font-size: 10px !important; text-transform: uppercase; white-space: nowrap; }
+        .dense-row th { padding: 0.6rem 0.4rem !important; font-size: 10px !important; text-transform: uppercase; }
         .no-wrap-id { white-space: nowrap; font-size: 11px; font-weight: 700; color: #1e3a8a; }
-        .status-badge { font-size: 9px; padding: 2px 8px; border-radius: 99px; font-weight: 600; text-transform: uppercase; }
+        .status-badge { font-size: 8px; padding: 2px 8px; border-radius: 99px; font-weight: 600; text-transform: uppercase; white-space: nowrap; }
     </style>
 </head>
 <body class="p-2 md:p-6 italic">
@@ -21,15 +21,19 @@
             <div class="bg-white px-3 py-3 rounded-xl shadow-sm border border-blue-100 min-w-fit flex items-center">
                 <span class="text-blue-700 font-bold text-[10px]">📍 COCO HUA HIN</span>
             </div>
-            <input type="text" id="searchInput" oninput="localSearch()" placeholder="ค้นหารหัส HP หรือ แปลง..." class="w-full px-4 py-3 bg-white rounded-xl shadow-sm outline-none border-none ring-1 ring-slate-200 text-[11px] font-bold">
+            <input type="text" id="searchInput" oninput="localSearch()" placeholder="ค้นหารหัส HP..." class="flex-1 px-4 py-3 bg-white rounded-xl shadow-sm outline-none border-none ring-1 ring-slate-200 text-[11px] font-bold">
         </div>
+
         <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-slate-100">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse dense-row">
-                    <thead class="bg-[#1e3a8a] text-white italic">
+                    <thead class="bg-[#1e3a8a] text-white">
                         <tr class="uppercase text-[9px] tracking-widest">
-                            <th class="w-[28%] pl-4">HP-ID</th><th class="w-[37%]">Plot Name</th>
-                            <th class="w-[20%] text-center">Status</th><th class="w-[15%] text-center">Manage</th>
+                            <th class="w-[20%] pl-4">HP-ID</th>
+                            <th class="w-[35%]">Plot</th>
+                            <th class="w-[15%] text-center">System</th>
+                            <th class="w-[20%] text-center">Unit Status</th>
+                            <th class="w-[10%] text-center">Edit</th>
                         </tr>
                     </thead>
                     <tbody id="unitTableBody" class="text-[11px] font-medium"></tbody>
@@ -38,19 +42,29 @@
         </div>
     </div>
 
-    <div id="editModal" onclick="if(event.target==this) closeEdit()" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 items-center justify-center p-4">
+    <div id="editModal" onclick="if(event.target==this) closeEdit()" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-8 shadow-2xl border-t-8 border-blue-600 animate-in fade-in zoom-in duration-200">
             <h2 class="text-sm font-bold text-slate-800 mb-6 uppercase italic">🛠️ Update CoCo: <span id="editingId" class="text-blue-600"></span></h2>
             <div class="space-y-4">
-                <div><label class="text-[9px] font-bold text-slate-400 uppercase ml-2 italic">แปลง (PLOT)</label>
-                    <input type="text" id="plotInput" class="w-full p-4 bg-slate-50 rounded-xl outline-none font-bold text-[11px]"></div>
-                <div class="grid grid-cols-2 gap-3">
-                    <input type="number" id="priceInput" placeholder="ราคา" class="p-4 bg-blue-50 text-blue-700 font-bold rounded-xl outline-none text-sm w-full">
-                    <select id="statusSelect" class="p-4 bg-white border border-slate-100 rounded-xl font-bold text-[10px] outline-none">
-                        <option value="Available">Available</option><option value="Under Construction">Under Con</option><option value="Sold">Sold</option><option value="Reserved">Reserved</option>
-                    </select>
+                <div>
+                    <label class="text-[9px] font-bold text-slate-400 uppercase ml-2 italic">แปลง (PLOT)</label>
+                    <input type="text" id="plotInput" class="w-full p-4 bg-slate-50 rounded-xl outline-none font-bold text-[11px]">
                 </div>
-                <button onclick="saveData()" id="btnSave" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold uppercase text-[10px] tracking-widest hover:bg-blue-600 transition-all mt-4">บันทึกข้อมูล CoCo</button>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[9px] font-bold text-slate-400 italic text-blue-500">System</label>
+                        <select id="sysStatus" class="w-full p-4 bg-white border border-slate-100 rounded-xl font-bold text-[10px] outline-none">
+                            <option value="Online">🟢 Online</option><option value="Pending">🟡 Pending</option><option value="Off">🔴 Off</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[9px] font-bold text-slate-400 italic text-orange-500">Status</label>
+                        <select id="unitStatus" class="w-full p-4 bg-white border border-slate-100 rounded-xl font-bold text-[10px] outline-none">
+                            <option value="Available">Available</option><option value="Under Construction">Under Con</option><option value="Reserved">Reserved</option><option value="Sold">Sold</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="saveData()" id="btnSave" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold uppercase text-[10px] tracking-widest shadow-lg hover:bg-blue-600 transition-all mt-4 italic">บันทึกข้อมูล CoCo</button>
             </div>
         </div>
     </div>
@@ -65,19 +79,25 @@
         }
         function renderTable(d) {
             document.getElementById('unitTableBody').innerHTML = d.map(u => `
-                <tr class="hover:bg-blue-50/50 transition-colors">
+                <tr>
                     <td class="no-wrap-id pl-4">${u.id}</td><td>${u.name || '-'}</td>
-                    <td class="text-center"><span class="bg-blue-50 text-blue-600 status-badge">${u.status || 'Available'}</span></td>
+                    <td class="text-center"><span class="${getSysColor(u.sysStatus)} status-badge">${u.sysStatus || 'PND'}</span></td>
+                    <td class="text-center"><span class="${getUnitColor(u.unitStatus)} status-badge">${u.unitStatus || 'N/A'}</span></td>
                     <td class="text-center text-blue-500"><button onclick="openEdit('${u.id}')" class="p-2"><i class="fa-solid fa-pen-to-square"></i></button></td>
                 </tr>`).join('');
+        }
+        function getSysColor(s) { return s==='Online'?'bg-green-100 text-green-600':(s==='Off'?'bg-red-100 text-red-600':'bg-yellow-100 text-yellow-600'); }
+        function getUnitColor(s) { 
+            if(s==='Available') return 'bg-green-50 text-green-600'; if(s==='Sold') return 'bg-red-50 text-red-600';
+            if(s==='Under Construction') return 'bg-orange-50 text-orange-600'; return 'bg-yellow-50 text-yellow-600';
         }
         async function openEdit(id) {
             document.getElementById('editingId').innerText = id; document.getElementById('editModal').style.display = 'flex';
             const res = await fetch(`${API_URL}?mode=getUnitDetail&project=${PROJECT_ID}&hpId=${id}`);
-            const d = await res.json();
-            document.getElementById('plotInput').value = d.ID_NAME || "";
-            document.getElementById('priceInput').value = d.Price || 0;
-            document.getElementById('statusSelect').value = d.Status || "Available";
+            const data = await res.json();
+            document.getElementById('plotInput').value = data.ID_NAME || "";
+            document.getElementById('sysStatus').value = data.System_Status || "Pending";
+            document.getElementById('unitStatus').value = data.Status || "Available";
         }
         function localSearch() {
             const t = document.getElementById('searchInput').value.toUpperCase();
@@ -86,7 +106,7 @@
         function closeEdit() { document.getElementById('editModal').style.display = 'none'; }
         async function saveData() {
             const btn = document.getElementById('btnSave'); btn.disabled = true;
-            const payload = { project: PROJECT_ID, hpId: document.getElementById('editingId').innerText, idName: document.getElementById('plotInput').value, price: document.getElementById('priceInput').value, status: document.getElementById('statusSelect').value, files: [] };
+            const payload = { project: PROJECT_ID, hpId: document.getElementById('editingId').innerText, idName: document.getElementById('plotInput').value, sysStatus: document.getElementById('sysStatus').value, unitStatus: document.getElementById('unitStatus').value, files: [] };
             try { await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) }); closeEdit(); init(); } catch (e) { btn.disabled = false; }
         }
         window.onload = init;
