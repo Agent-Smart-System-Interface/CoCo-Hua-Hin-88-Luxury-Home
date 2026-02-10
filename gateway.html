@@ -1,1 +1,54 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HP02 | Admin Gateway</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 min-h-screen flex items-center justify-center">
+
+<div class="bg-white p-10 rounded-3xl w-full max-w-sm text-center">
+  <h1 class="font-bold text-2xl mb-6">HP02 ADMIN</h1>
+
+  <input id="pin" type="password" placeholder="PIN"
+    class="w-full border rounded-xl px-4 py-3 mb-4 text-center font-bold">
+
+  <button onclick="login()"
+    class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold">
+    LOGIN
+  </button>
+
+  <div id="err" class="text-red-500 text-sm mt-4 hidden"></div>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbxc76n6YKLUCCHZZR12c5K4_0k40gHa2ZzDMVZn29BElQlSO3X6O8B7dFIFi0bEukqJ/exec";
+const PROJECT_CODE = "HP02";
+
+function login(){
+  const pin = document.getElementById("pin").value.trim();
+  const err = document.getElementById("err");
+  err.classList.add("hidden");
+
+  const cb = "cb_" + Date.now();
+  window[cb] = (res)=>{
+    if(!res || !res.ok){
+      err.textContent = "PIN ไม่ถูกต้อง";
+      err.classList.remove("hidden");
+      return;
+    }
+    localStorage.setItem("HP_TOKEN",res.token);
+    localStorage.setItem("HP_ROLE",res.role);
+    localStorage.setItem("HP_PROJECT",res.project);
+    location.href = "dashboard.html";
+  };
+
+  const s = document.createElement("script");
+  s.src = `${API_URL}?mode=login&project=${PROJECT_CODE}&pin=${pin}&callback=${cb}`;
+  document.body.appendChild(s);
+}
+</script>
+</body>
+</html>
 
