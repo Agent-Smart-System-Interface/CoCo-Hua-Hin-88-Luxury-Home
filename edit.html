@@ -47,6 +47,7 @@
     }
     .pdfmeta{flex:1; min-width:0;}
     .pdfname{font-weight:900;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
     .pdflinkrow{display:flex; align-items:center; gap:8px; min-width:0;}
     .pdflink{font-size:12px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; min-width:0;}
     .pdfdel{
@@ -61,6 +62,7 @@
       flex:0 0 auto;
     }
     .pdfdel:hover{ background: rgba(239,68,68,.95); }
+
     .pdfbtn2{
       padding:10px 14px;border-radius:14px;
       font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.08em;
@@ -78,13 +80,7 @@
         <p class="text-blue-400 font-bold uppercase tracking-widest text-xs mb-2">Master Database Editor</p>
         <h1 id="displayId" class="text-3xl sm:text-4xl font-bold tracking-tighter italic">HP-XXXX</h1>
       </div>
-
-      <!-- ✅ FIX (HP00 style): ปุ่มปิดให้กลับ dashboard หรือ history.back และพก token/project -->
-      <a id="closeBtn"
-         href="#"
-         class="bg-white/10 hover:bg-white/20 p-4 rounded-2xl transition-all active:scale-95"
-         title="Close"
-         aria-label="Close">✕</a>
+      <button onclick="history.back()" class="bg-white/10 hover:bg-white/20 p-4 rounded-2xl transition-all" title="Close">✕</button>
     </div>
 
     <div class="flex gap-8 mb-6 border-b border-slate-200">
@@ -285,7 +281,6 @@
         <div><span class="field-label">Map Link</span><input id="Map_Link" class="field-input"></div>
         <div><span class="field-label">Virtual Tour</span><input id="Virtual_Tour" class="field-input"></div>
 
-        <!-- ✅ HQ lock -->
         <div class="col-span-full">
           <span class="field-label">System Status <span id="sysHint" class="text-slate-300">(READ ONLY)</span></span>
           <select id="System_Status_Select" class="field-input font-bold bg-slate-50" disabled>
@@ -293,7 +288,9 @@
             <option value="Pending">Pending</option>
             <option value="Live">Live</option>
           </select>
+
           <input id="System_Status" class="hidden" value="Pending">
+
           <p class="text-xs text-slate-400 mt-2 italic">
             Offline = ไม่แสดงออนไลน์ | Pending = ยังไม่แสดงออนไลน์แต่แก้ไขข้อมูลได้ | Live = ข้อมูลพร้อมแล้ว (กำหนดโดย Master/HQ)
           </p>
@@ -315,56 +312,23 @@
       <p class="text-slate-400 text-sm mb-8 font-bold uppercase tracking-wider">
         ข้อมูลและรูปภาพถูกซิงค์ไปยัง <br>Google Drive &amp; Sheets แล้ว
       </p>
-      <a id="backAfterSave"
-         href="#"
-         class="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-slate-800 transition-all inline-block">
+      <button onclick="history.back()" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-slate-800 transition-all">
         กลับสู่หน้าหลัก
-      </a>
+      </button>
     </div>
   </div>
 
   <script>
     // ============================
-    // CONFIG (HP00 style: token forwarding + JSONP)
+    // CONFIG
     // ============================
-    const API_URL = "https://script.google.com/macros/s/AKfycbxc76n6YKLUCCHZZR12c5K4_0k40gHa2ZzDMVZn29BElQlSO3X6O8B7dFIFi0bEukqJ/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbyTeJrl7A5D6nSjcxBsMAmfT0YcopmjMqI5YuXZ65FOXnWziWwe_j1FocdlaWWlQePR/exec";
     const urlParams = new URLSearchParams(location.search);
+    const HP_ID = urlParams.get("id");
+    const PROJECT = urlParams.get("project") || "HP00";
 
-    const HP_ID = (urlParams.get("id") || "").trim();
-    const PROJECT = (urlParams.get("project") || "HP02").trim();
-
-    // ✅ token: URL > localStorage
-    const TOKEN_QS = (urlParams.get("token") || "").trim();
-    const TOKEN_LS = (localStorage.getItem("HP_AUTH_TOKEN") || "").trim();
-    const TOKEN = (TOKEN_QS || TOKEN_LS).trim();
-
-    // ✅ role (เก็บจาก gateway)
-    const ROLE  = (localStorage.getItem("HP_AUTH_ROLE") || "").trim(); // "HQ" | "PROJECT"
-
-    // ✅ ถ้ามี token ใน URL ให้เก็บลง localStorage
-    if (TOKEN_QS) localStorage.setItem("HP_AUTH_TOKEN", TOKEN_QS);
-
-    // ✅ ถ้าไม่มี token ให้กลับ gateway (เหมือน HP00)
-    if (!TOKEN) {
-      location.href = `gateway.html?project=${encodeURIComponent(PROJECT)}`;
-    }
-
-    // ✅ close/back button: ถ้ามี history ใช้ back, ถ้าไม่มีกลับ dashboard พร้อม token
-    (function setCloseLinks(){
-      const t = TOKEN ? `&token=${encodeURIComponent(TOKEN)}` : "";
-      const dash = `dashboard.html?project=${encodeURIComponent(PROJECT)}${t}`;
-
-      const closeBtn = document.getElementById("closeBtn");
-      if (closeBtn){
-        closeBtn.addEventListener("click", (e)=>{
-          e.preventDefault();
-          history.length > 1 ? history.back() : (location.href = dash);
-        });
-      }
-
-      const backAfterSave = document.getElementById("backAfterSave");
-      if (backAfterSave) backAfterSave.href = dash;
-    })();
+    const TOKEN = (urlParams.get("token") || localStorage.getItem("HP_AUTH_TOKEN") || "").trim();
+    const ROLE  = (localStorage.getItem("HP_AUTH_ROLE") || "").trim();
 
     let existingGallery = [];
     let removedGallery = [];
@@ -372,7 +336,8 @@
 
     let pdfLinks = { sales:"", material:"", floorplan:"" };
     const MAX_PDF_BYTES = 6 * 1024 * 1024;
-    let pdfAction = { sales:"keep", material:"keep", floorplan:"keep" }; // keep | clear | replace
+
+    let pdfAction = { sales:"keep", material:"keep", floorplan:"keep" };
 
     const SUBDISTRICTS_BY_DISTRICT = {
       "Hua Hin": ["Hua Hin","Nong Kae","Hin Lek Fai","Thap Tai","Huai Sat Yai","Bueng Nakhon","Nong Phlap"],
@@ -380,9 +345,6 @@
       "Pranburi": ["Pran Buri","Pak Nam Pran","Wang Phong","Nong Ta Taem","Nong Din Daeng","Khao Noi","Khao Chao"]
     };
 
-    // ============================
-    // UI
-    // ============================
     function switchTab(tab) {
       document.getElementById("tab-photo").classList.toggle("hidden", tab !== "photo");
       document.getElementById("tab-info").classList.toggle("hidden", tab !== "info");
@@ -521,32 +483,34 @@
       setPdfText(key, "เลือกไฟล์ใหม่: " + f.name);
     }
 
-    // ============================
-    // JSONP (HP00 style)
-    // ============================
-    function jsonp(url, timeoutMs = 20000){
+    function jsonp_(paramsObj){
       return new Promise((resolve, reject) => {
-        const cb = "cb_" + Math.random().toString(36).slice(2);
-        const script = document.createElement("script");
-        const timer = setTimeout(() => { cleanup(); reject(new Error("timeout")); }, timeoutMs);
+        const cbName = "cb_" + Math.random().toString(16).slice(2);
+        const timeout = setTimeout(() => { cleanup(); reject(new Error("JSONP timeout")); }, 15000);
 
         function cleanup(){
-          clearTimeout(timer);
-          if (script.parentNode) script.parentNode.removeChild(script);
-          try{ delete window[cb]; }catch(e){ window[cb]=undefined; }
+          clearTimeout(timeout);
+          try { delete window[cbName]; } catch(e){ window[cbName] = undefined; }
+          if (script && script.parentNode) script.parentNode.removeChild(script);
         }
 
-        window[cb] = (data) => { cleanup(); resolve(data); };
-        const sep = url.includes("?") ? "&" : "?";
-        script.src = url + sep + "callback=" + encodeURIComponent(cb);
-        script.onerror = () => { cleanup(); reject(new Error("jsonp_error")); };
+        window[cbName] = (data) => { cleanup(); resolve(data); };
+
+        const urlParams = new URLSearchParams();
+        Object.entries(paramsObj || {}).forEach(([k,v]) => {
+          if (v === undefined || v === null) return;
+          urlParams.set(k, String(v));
+        });
+        urlParams.set("callback", cbName);
+        urlParams.set("t", Date.now());
+
+        const script = document.createElement("script");
+        script.src = API_URL + "?" + urlParams.toString();
+        script.onerror = () => { cleanup(); reject(new Error("JSONP network error")); };
         document.body.appendChild(script);
       });
     }
 
-    // ============================
-    // HQ lock/unlock System_Status
-    // ============================
     function applyRoleLock_(){
       const isHQ = (ROLE === "HQ");
       const sel = document.getElementById("System_Status_Select");
@@ -567,16 +531,23 @@
       }
     }
 
-    // ============================
-    // LOAD DATA (JSONP first)
-    // ============================
     async function loadData() {
       document.getElementById("displayId").innerText = HP_ID || "HP-XXXX";
       if (!HP_ID || !PROJECT) return alert("Missing id/project in URL");
 
       try {
-        const url = `${API_URL}?mode=getUnitDetail&hpId=${encodeURIComponent(HP_ID)}&project=${encodeURIComponent(PROJECT)}&token=${encodeURIComponent(TOKEN)}&t=${Date.now()}`;
-        const data = await jsonp(url);
+        let data = null;
+        try{
+          data = await jsonp_({
+            mode: "getUnitDetail",
+            hpId: HP_ID,
+            project: PROJECT,
+            token: TOKEN
+          });
+        }catch(_){
+          const res = await fetch(`${API_URL}?mode=getUnitDetail&hpId=${encodeURIComponent(HP_ID)}&project=${encodeURIComponent(PROJECT)}&token=${encodeURIComponent(TOKEN)}&t=${Date.now()}`);
+          data = await res.json();
+        }
 
         if (data && data.error) throw new Error(data.error);
 
@@ -585,7 +556,6 @@
           if (el) el.value = (data[k] ?? "");
         });
 
-        // ✅ กัน FB_Link หาย
         const fbEl = document.getElementById("FB_Link");
         if (fbEl) fbEl.value = (data.FB_Link ?? "");
 
@@ -598,7 +568,6 @@
           setSubDistrictOptions("", "");
         }
 
-        // System_Status
         const rawSys = (data.System_Status ?? "").toString().trim();
         const sysVal = rawSys || "Pending";
         document.getElementById("System_Status").value = sysVal;
@@ -624,6 +593,7 @@
           material: (data.Material_PDF || "").toString().trim(),
           floorplan: (data.FloorPlan_PDF || "").toString().trim()
         };
+
         pdfAction = { sales:"keep", material:"keep", floorplan:"keep" };
 
         setPdfText("sales", pdfLinks.sales || "ยังไม่มีไฟล์");
@@ -635,36 +605,32 @@
       }
     }
 
-    // ============================
-    // BASE64
-    // ============================
     const toBase64 = file => new Promise((resolve, reject) => {
       try {
         const reader = new FileReader();
-        reader.onload = () => resolve({ data: reader.result.split(",")[1], type: file.type, name: file.name });
+        reader.onload = () => resolve({ data: reader.result.split(",")[1], type: file.type });
         reader.onerror = () => reject(new Error("File read error"));
         reader.readAsDataURL(file);
       } catch (e) { reject(e); }
     });
 
-    // ============================
-    // VERIFY after save (reload detail)
-    // ============================
     async function verifyAfterSave_(){
-      const url = `${API_URL}?mode=getUnitDetail&hpId=${encodeURIComponent(HP_ID)}&project=${encodeURIComponent(PROJECT)}&token=${encodeURIComponent(TOKEN)}&t=${Date.now()}`;
-      return await jsonp(url);
+      let data = null;
+      try{
+        data = await jsonp_({ mode:"getUnitDetail", hpId: HP_ID, project: PROJECT, token: TOKEN });
+      }catch(_){
+        const res = await fetch(`${API_URL}?mode=getUnitDetail&hpId=${encodeURIComponent(HP_ID)}&project=${encodeURIComponent(PROJECT)}&token=${encodeURIComponent(TOKEN)}&t=${Date.now()}`);
+        data = await res.json();
+      }
+      return data;
     }
 
-    // ============================
-    // SAVE (POST + no-cors fallback + verify)
-    // ============================
     async function updateData() {
       const btn = document.getElementById("saveBtn");
       btn.disabled = true;
       const oldText = btn.innerText;
       btn.innerText = "UPDATING DATABASE...";
 
-      // sync mirror system status
       document.getElementById("System_Status").value = document.getElementById("System_Status_Select").value;
 
       const keepGallery = existingGallery.filter(u => !removedGallery.includes(u));
@@ -746,36 +712,46 @@
         const floorPdf = document.getElementById("file_floorplan_pdf").files[0];
         if (floorPdf) payload.file_floorplan_pdf = await toBase64(floorPdf);
 
-        // Attempt #1: normal POST
-        let ok = false;
+        let out = null;
         try{
           const res = await fetch(API_URL, { method:"POST", body: JSON.stringify(payload) });
-          const out = await res.json().catch(() => ({}));
+          out = await res.json().catch(() => ({}));
           if (!res.ok || out.error) throw new Error(out.error || "Save failed");
-          ok = true;
-        }catch(_){
-          // Attempt #2: no-cors (ยิงถึงแน่นอนแต่ไม่อ่าน response)
-          try{ await fetch(API_URL, { method:"POST", mode:"no-cors", body: JSON.stringify(payload) }); }catch(e){}
-          // verify
+        }catch(err1){
+          try{
+            await fetch(API_URL, { method:"POST", mode:"no-cors", body: JSON.stringify(payload) });
+          }catch(_){}
+
           const after = await verifyAfterSave_();
           if (after && after.error) throw new Error(after.error);
-          ok = true;
+
+          const wantStatus = String(payload.Status || "").trim();
+          const gotStatus = String(after.Status || "").trim();
+          if (wantStatus && gotStatus && wantStatus !== gotStatus) {
+            throw new Error("บันทึกไม่สำเร็จ (Status ยังไม่เปลี่ยนในชีท)");
+          }
+
+          out = { ok:true, pdfLinks: {
+            sales: after.Sales_Gallery || "",
+            material: after.Material_PDF || "",
+            floorplan: after.FloorPlan_PDF || ""
+          }};
         }
 
-        if (!ok) throw new Error("Save failed");
-
-        // refresh pdf labels from latest detail
-        try{
-          const after = await verifyAfterSave_();
+        if (out && out.pdfLinks) {
           pdfLinks = {
-            sales: (after.Sales_Gallery || "").toString().trim(),
-            material: (after.Material_PDF || "").toString().trim(),
-            floorplan: (after.FloorPlan_PDF || "").toString().trim()
+            sales: out.pdfLinks.sales || "",
+            material: out.pdfLinks.material || "",
+            floorplan: out.pdfLinks.floorplan || ""
           };
           setPdfText("sales", pdfLinks.sales || "ยังไม่มีไฟล์");
           setPdfText("material", pdfLinks.material || "ยังไม่มีไฟล์");
           setPdfText("floorplan", pdfLinks.floorplan || "ยังไม่มีไฟล์");
-        }catch(_){}
+        } else {
+          if (pdfAction.sales === "clear") setPdfText("sales", "ยังไม่มีไฟล์");
+          if (pdfAction.material === "clear") setPdfText("material", "ยังไม่มีไฟล์");
+          if (pdfAction.floorplan === "clear") setPdfText("floorplan", "ยังไม่มีไฟล์");
+        }
 
         document.getElementById("successPopup").classList.remove("hidden");
 
@@ -786,9 +762,6 @@
       }
     }
 
-    // ============================
-    // INIT
-    // ============================
     window.onload = () => {
       bindDistrictChange();
       loadData();
