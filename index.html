@@ -367,7 +367,7 @@
         <span class="wiggle">🌴</span>
       </div>
       <div class="loaderText">Smart Properties System</div>
-      <div class="loaderSub">Syncing database...</div>
+      <div class="loaderSub" id="loaderSub">Syncing database...</div>
     </div>
   </div>
 
@@ -378,6 +378,8 @@
         <p class="title" id="masterVill">Master Vill</p>
         <div class="subtitle">
           <span class="chip" id="countChip">0 items</span>
+          <!-- ✅ debug -->
+          <span class="chip" id="debugChip" title="Project ที่กำลังเรียก API">PJ: -</span>
         </div>
       </div>
       <a class="iconbtn" id="gatewayBtn" href="#" aria-label="Gateway">
@@ -414,14 +416,18 @@
 
   <script>
     /**********************************************************
-     * CONFIG (Web App URL ใหม่ของคุณ)
+     * CONFIG
      **********************************************************/
     const API_URL = "https://script.google.com/macros/s/AKfycbyTeJrl7A5D6nSjcxBsMAmfT0YcopmjMqI5YuXZ65FOXnWziWwe_j1FocdlaWWlQePR/exec";
 
-    const urlParams = new URLSearchParams(location.search);
-    const PROJECT = (urlParams.get("project") || "HP00").trim();
+    // ✅ สำคัญ: ถ้า URL ไม่มี ?project= ให้เดาจากชื่อโฟลเดอร์เว็บก่อน
+    // - ถ้าเว็บนี้คือ CoCo-Hua-Hin-88 ให้ตั้ง DEFAULT เป็น project_002 (แก้ตรงนี้ได้ทันที)
+    const DEFAULT_PROJECT = "project_002";
 
-    const GATEWAY_URL = "gateway.html"; // หรือใส่เต็มก็ได้
+    const urlParams = new URLSearchParams(location.search);
+    const PROJECT = (urlParams.get("project") || DEFAULT_PROJECT).trim();
+
+    const GATEWAY_URL = "gateway.html";
     const DETAILS_URL = "details.html?id=";
 
     const $ = (id)=>document.getElementById(id);
@@ -438,7 +444,12 @@
       el.textContent = msg;
       el.classList.add("show");
       clearTimeout(toast._t);
-      toast._t = setTimeout(()=>el.classList.remove("show"), 2200);
+      toast._t = setTimeout(()=>el.classList.remove("show"), 2600);
+    }
+
+    function setLoaderSub(msg){
+      const el = $("loaderSub");
+      if(el) el.textContent = msg || "Syncing database...";
     }
 
     function fmtPrice(v){
@@ -456,16 +467,9 @@
       return {bg:"rgba(255,255,255,.75)", fg:"rgba(11,19,32,.80)"};
     }
 
-    function normalizePlot(p){
-      return String(p||"").trim();
-    }
+    function normalizePlot(p){ return String(p||"").trim(); }
+    function isLiveSysStatus(v){ return String(v||"").trim().toLowerCase() === "live"; }
 
-    // ✅ แสดงเฉพาะ Live เท่านั้น
-    function isLiveSysStatus(v){
-      return String(v||"").trim().toLowerCase() === "live";
-    }
-
-    // ✅ bump cache key (กันติด cache เก่า)
     const CACHE_KEY = `SP_UNITLIST_${PROJECT}_v3_liveOnly_jsonp`;
 
     function readCache(){
@@ -484,17 +488,16 @@
       }catch(_){}
     }
 
-    // ✅ JSONP helper (กัน CORS)
     function jsonp_(paramsObj, timeoutMs = 15000){
       return new Promise((resolve, reject) => {
         const cbName = "cb_" + Math.random().toString(16).slice(2);
-        const urlParams = new URLSearchParams();
+        const sp = new URLSearchParams();
         Object.entries(paramsObj || {}).forEach(([k,v]) => {
           if (v === undefined || v === null) return;
-          urlParams.set(k, String(v));
+          sp.set(k, String(v));
         });
-        urlParams.set("callback", cbName);
-        urlParams.set("t", Date.now());
+        sp.set("callback", cbName);
+        sp.set("t", Date.now());
 
         const script = document.createElement("script");
         let done = false;
@@ -526,16 +529,12 @@
           reject(new Error("JSONP network error"));
         };
 
-        script.src = API_URL + "?" + urlParams.toString();
+        script.src = API_URL + "?" + sp.toString();
         document.body.appendChild(script);
       });
     }
 
     function unwrapListResponse_(raw){
-      // รองรับหลายรูปแบบ:
-      // 1) raw เป็น array -> return raw
-      // 2) {ok:true, data:[...]} หรือ {data:[...]} -> return data
-      // 3) {items:[...]} -> return items
       if (Array.isArray(raw)) return raw;
       if (raw && Array.isArray(raw.data)) return raw.data;
       if (raw && Array.isArray(raw.items)) return raw.items;
@@ -546,9 +545,10 @@
       const cached = readCache();
       if (cached) return cached;
 
-      // ✅ ใช้ JSONP
+      setLoaderSub(`Loading project: ${PROJECT} ...`);
       const raw = await jsonp_({ mode:"getUnitList", project: PROJECT });
       const list = unwrapListResponse_(raw);
+
       if (!Array.isArray(list)) {
         const err = (raw && raw.error) ? raw.error : "API invalid";
         throw new Error(err);
@@ -581,7 +581,6 @@
       const plotVal = $("plotSelect").value;
       const sortVal = $("sortSelect").value;
 
-      // ✅ เริ่มจากรายการ Live เท่านั้น
       const liveOnly = all.filter(x => isLiveSysStatus(x.sysStatus));
 
       filtered = liveOnly.filter(x=>{
@@ -723,6 +722,7 @@
     }
 
     (function init(){
+      $("debugChip").textContent = `PJ: ${PROJECT}`;
       $("gatewayBtn").href = `${GATEWAY_URL}?project=${encodeURIComponent(PROJECT)}`;
       showLoader(true);
       loadAll();
@@ -734,7 +734,6 @@
       try{
         const data = await fetchUnitList();
 
-        // ✅ map key ให้เข้าระบบ (รองรับหลายชื่อ key)
         all = data.map(x=>({
           id: x.id || x.hpId || x.HP_ID || "",
           plot: x.plot || x.Plot || "",
@@ -757,7 +756,7 @@
       }catch(err){
         console.error(err);
         $("countChip").textContent = "โหลดไม่สำเร็จ";
-        toast("โหลดข้อมูลไม่สำเร็จ");
+        toast(String(err.message || err)); // ✅ โชว์ error จริง (เช่น ไม่พบแท็บชีท)
         $("empty").style.display = "block";
         showLoader(false);
       }
