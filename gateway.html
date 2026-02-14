@@ -205,36 +205,31 @@
 /** =========================
  * CONFIG (แก้ได้จุดเดียว)
  * ========================= */
-// ✅ ใช้ Apps Script URL ใหม่ของคุณ (ตัวเดียวกับ details โค้ดใหม่)
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxlsoGQV_IF_UOcQTpAiUajl9bIK8h4B1irTklEvmpiTPhiDPi7vnU-E3xm9pr3acN/exec";
-
-// localStorage key (คงเดิม)
 const LS_TOKEN_KEY = "HP_AUTH_TOKEN";
 
 /** =========================
  * URL / Alias / Back
  * ========================= */
 const qs = new URLSearchParams(location.search);
-
-// อ่านค่า project จาก URL
 let projectRaw = (qs.get("project") || "").trim();
 
-// ✅ BEST: Alias map (สวยๆหน้าเว็บ → แท็บจริงในชีต)
+// ✅ Alias map: ชื่อที่ใช้ในเว็บ → ชื่อแท็บจริงในชีต
 const PROJECT_ALIAS = {
-  "Properties": "HP00",   // <-- คุณใช้ Properties อยู่ ให้ชี้ไปแท็บจริงที่ล็อกอิน
+  "Properties": "HP00",
   "properties": "HP00",
   "MASTER": "HP00",
-  "Master": "HP00"
+  "Master": "HP00",
+  "HP00": "HP00",
 };
 
-// project ที่ใช้จริง
 let project = PROJECT_ALIAS[projectRaw] || projectRaw || "HP00";
 
-// back url (มาจาก details/goGateway)
+// back url
 let back = (qs.get("back") || "").trim();
 try{ back = back ? decodeURIComponent(back) : ""; }catch(e){}
 
-// แสดงบน UI
+/** UI refs */
 const projectInput = document.getElementById("projectInput");
 const pinInput = document.getElementById("pinInput");
 const errBox = document.getElementById("errBox");
@@ -243,11 +238,11 @@ const chipProject = document.getElementById("chipProject");
 const chipBack = document.getElementById("chipBack");
 const miniNote = document.getElementById("miniNote");
 
-projectInput.value = projectRaw || project; // ให้ผู้ใช้เห็นค่าที่มากับลิงก์
+// แสดงบน UI
+projectInput.value = projectRaw || project;
 chipProject.textContent = "project: " + (projectRaw || project);
 chipBack.textContent = "back: " + (back ? back : "-");
 
-// แจ้ง note เล็กๆ
 if(projectRaw && PROJECT_ALIAS[projectRaw]){
   miniNote.textContent = `Alias: ${projectRaw} → ${PROJECT_ALIAS[projectRaw]}`;
 }else{
@@ -299,43 +294,36 @@ function jsonp(url, timeoutMs = 20000){
 
 /** redirect after login */
 function goAfterLogin(token){
-  // เก็บ token ให้ทุกหน้าใช้
   try{ localStorage.setItem(LS_TOKEN_KEY, token); }catch(e){}
 
-  // ถ้ามี back → กลับไปหน้านั้น (และเติม token ให้)
   if(back){
     try{
       const u = new URL(back, location.origin);
-      u.searchParams.set("project", project); // ใช้ project จริง
+      u.searchParams.set("project", project);
       u.searchParams.set("token", token);
       location.href = u.toString();
       return;
     }catch(e){
-      // ถ้า back ไม่เป็น URL เต็ม ให้พยายามแบบ path
       const join = back.startsWith("/") ? back : ("/" + back);
-      location.href = join + (join.includes("?") ? "&" : "?") + "project=" + encodeURIComponent(project) + "&token=" + encodeURIComponent(token);
+      location.href = join + (join.includes("?") ? "&" : "?") +
+        "project=" + encodeURIComponent(project) + "&token=" + encodeURIComponent(token);
       return;
     }
   }
 
-  // fallback → dashboard
   location.href = `dashboard.html?project=${encodeURIComponent(project)}&token=${encodeURIComponent(token)}`;
 }
 
 /** =========================
- * Login via GS (ให้ GS เป็นคนตัดสิน PIN)
+ * Login via GS (ลอง project หลายแบบอัตโนมัติ)
  * ========================= */
 async function doLogin(){
   clearError();
   setLoading(true);
 
-  // อ่านค่าจากช่อง
   const projectTyped = (projectInput.value || "").trim();
-
-  // ใช้ alias ถ้าพิมพ์ Properties มา
-  project = PROJECT_ALIAS[projectTyped] || projectTyped || project;
-
   const pin = (pinInput.value || "").trim();
+
   if(!pin){
     setLoading(false);
     setError("กรุณาใส่ PIN");
@@ -343,39 +331,76 @@ async function doLogin(){
     return;
   }
 
+  // ✅ สร้าง candidates เพื่อแก้ “Project not configured for login”
+  const candidates = [];
+  const add = (v)=>{ v=(v||"").trim(); if(v && !candidates.includes(v)) candidates.push(v); };
+
+  // 1) สิ่งที่ผู้ใช้พิมพ์/มากับ URL
+  add(projectTyped);
+  add(projectRaw);
+
+  // 2) alias ของสิ่งที่พิมพ์/มากับ URL
+  add(PROJECT_ALIAS[projectTyped]);
+  add(PROJECT_ALIAS[projectRaw]);
+
+  // 3) ค่า fallback ที่คุณใช้จริง
+  add(project);
+  add("HP00");
+  add("Properties");
+
+  // 4) เผื่อ case ต่างตัวพิมพ์
+  add((projectTyped||"").toLowerCase());
+  add((projectTyped||"").toUpperCase());
+  add((projectRaw||"").toLowerCase());
+  add((projectRaw||"").toUpperCase());
+
+  let lastErr = "";
+
   try{
-    // ✅ ให้ GS ตรวจสิทธิ์ (mode=login)
-    const url =
-      `${SCRIPT_URL}?mode=login` +
-      `&project=${encodeURIComponent(project)}` +
-      `&pin=${encodeURIComponent(pin)}`;
+    for(const projTry of candidates){
+      const url =
+        `${SCRIPT_URL}?mode=login` +
+        `&project=${encodeURIComponent(projTry)}` +
+        `&pin=${encodeURIComponent(pin)}`;
 
-    const res = await jsonp(url, 20000);
+      const res = await jsonp(url, 20000);
 
-    // รูปแบบตอบกลับที่รองรับหลายแบบ
-    const ok = !!(res && (res.ok === true || res.success === true || res.status === "ok"));
-    const token = (res && (res.token || res.authToken || res.access_token)) ? String(res.token || res.authToken || res.access_token) : "";
-    const err = res && (res.error || res.message) ? String(res.error || res.message) : "";
+      const ok = !!(res && (res.ok === true || res.success === true || res.status === "ok"));
+      const token = (res && (res.token || res.authToken || res.access_token))
+        ? String(res.token || res.authToken || res.access_token)
+        : "";
+      const err = res && (res.error || res.message) ? String(res.error || res.message) : "";
 
-    if(!ok || !token){
-      setLoading(false);
-
-      // ✅ ถ้า GS บอกว่า project ไม่ถูกต้อง / ไม่เจอ
-      if((err || "").toLowerCase().includes("project")){
-        setError(err || "Project not configured (ตรวจชื่อแท็บใน Google Sheet / project param)");
+      if(ok && token){
+        // ✅ สำเร็จด้วย project นี้
+        project = projTry;
+        chipProject.textContent = "project: " + project;
+        setLoading(false);
+        goAfterLogin(token);
         return;
       }
 
-      // ✅ ถ้า PIN ผิด
-      setError(err || "PIN ไม่ถูกต้อง");
-      pinInput.focus();
-      pinInput.select?.();
-      return;
+      lastErr = err || "Login failed";
+
+      // ถ้าเป็น PIN ผิด → ไม่ต้องลองต่อ
+      const eLow = (lastErr || "").toLowerCase();
+      const isPinErr =
+        eLow.includes("pin") ||
+        eLow.includes("invalid") ||
+        eLow.includes("not authorized") ||
+        eLow.includes("unauthorized");
+
+      if(isPinErr){
+        break;
+      }
+
+      // ถ้าเป็นปัญหา project → ลองต่อไป candidate ถัดไป
     }
 
-    // success
     setLoading(false);
-    goAfterLogin(token);
+    setError(lastErr || "Login ไม่สำเร็จ");
+    pinInput.focus();
+    pinInput.select?.();
 
   }catch(e){
     setLoading(false);
