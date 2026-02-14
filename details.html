@@ -1,1291 +1,432 @@
 <!doctype html>
 <html lang="th">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>smart properties system · details</title>
-<link rel="preconnect" href="https://script.google.com">
-<link rel="preconnect" href="https://lh3.googleusercontent.com">
-<style>
-/* ====== (คง CSS เดิมทั้งหมดของคุณ) ====== */
-:root{
---bg:#a8bdd6;
---card:#ffffff;
---text:#0f172a;
---muted:#6b7c93;
---radius:22px;
---shadow: 0 12px 30px rgba(0,0,0,.12);
---soft:#f3f6fb;
---line:rgba(255,255,255,.45);
-}
-*{box-sizing:border-box}
-body{
-margin:0;
-font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans Thai", sans-serif;
-background: radial-gradient(ellipse at top, rgba(255,255,255,.25), rgba(255,255,255,0) 55%) , var(--bg);
-color:var(--text);
-}
-.wrap{max-width:1100px; margin:0 auto; padding:16px 14px 30px;}
-.topbar{
-display:flex; align-items:center; justify-content:space-between;
-padding:12px 12px;
-border-radius: 18px;
-background: rgba(255,255,255,.18);
-backdrop-filter: blur(10px);
-border: 1px solid var(--line);
-}
-.brand{display:flex; gap:12px; align-items:center;}
-.logo{
-width:44px; height:44px; border-radius:999px; background:rgba(255,255,255,.55);
-display:grid; place-items:center; font-weight:800;
-flex:0 0 auto;
-
-/* ✅ FIX ONLY: ทำให้คลิกได้แบบลิงก์ และไม่เปลี่ยนสไตล์เดิม */
-text-decoration:none;
-color: inherit;
-}
-.logo:active{ transform: scale(.99); }
-.logo svg{ width:22px; height:22px; display:block; }
-
-.titles{min-width:0}
-.titles h1{
-margin:0;
-font-size:20px;
-line-height:1.15;
-font-weight:1100;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
-letter-spacing:.2px;
-}
-.titles .sub{display:none;}
-.backBtn{
-width:44px; height:44px; border-radius:999px;
-border:0; background: rgba(255,255,255,.55);
-cursor:pointer; font-size:18px; font-weight:900;
-flex:0 0 auto;
-}
-.card{
-margin-top:14px;
-background: rgba(255,255,255,.88);
-border:1px solid rgba(255,255,255,.65);
-border-radius: var(--radius);
-box-shadow: var(--shadow);
-overflow:hidden;
-}
-/* Gallery */
-.gallery{
-position:relative;
-background:#dfe9f6;
-}
-.mainSlide{
-width:100%;
-aspect-ratio: 16/10;
-object-fit:cover;
-display:block;
-}
-.tagTopLeft{
-position:absolute;
-left:24px;
-top:24px;
-padding:16px 30px;
-border-radius:999px;
-background: rgba(255,255,255,.92);
-border:0;
-box-shadow:none;
-backdrop-filter:none;
-font-weight:1100;
-font-size:42px;
-line-height:1;
-color:#0f172a;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
-max-width:78%;
-}
-.tagBottomRight{
-position:absolute;
-right:24px;
-bottom:22px;
-padding:0;
-border-radius:0;
-background:transparent;
-border:0;
-box-shadow:none;
-backdrop-filter:none;
-font-weight:1100;
-font-size:36px;
-line-height:1;
-color: rgba(255,255,255,1);
-text-shadow: 0 8px 16px rgba(0,0,0,.38);
-user-select:none;
-pointer-events:none;
-}
-@media (max-width: 520px){
-  .tagTopLeft{
-    left:18px;
-    top:18px;
-    padding:6px 11px;
-    font-size:17px;
-  }
-  .tagBottomRight{
-    right:18px;
-    bottom:18px;
-    font-size:12px;
-    text-shadow: 0 10px 18px rgba(0,0,0,.40);
-  }
-}
-.thumbStrip{
-background: rgba(255,255,255,.78);
-padding:10px;
-display:flex;
-gap:10px;
-overflow:auto;
-scroll-snap-type: x mandatory;
-}
-.thumb{
-width:92px; height:64px;
-flex:0 0 auto;
-border-radius: 16px;
-object-fit:cover;
-border:3px solid transparent;
-cursor:pointer;
-scroll-snap-align: start;
-background:#e8f0fb;
-}
-.thumb.active{border-color:#0f172a;}
-.content{padding:14px;}
-.headRow{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:10px;
-flex-wrap:nowrap;
-}
-.hp{display:none;}
-.price{
-font-size:28px;
-font-weight:1100;
-letter-spacing:.2px;
-white-space:nowrap;
-flex:1 1 auto;
-min-width:0;
-}
-.statusBelow{
-display:inline-flex;
-align-items:center;
-justify-content:center;
-padding:8px 12px;
-border-radius: 12px;
-font-weight:1100;
-font-size:16px;
-line-height:1;
-background: rgba(255,255,255,.92);
-border: 2px solid rgba(16,185,129,.55);
-color: rgba(5,150,105,1);
-box-shadow: 0 10px 20px rgba(0,0,0,.10);
-white-space:nowrap;
-flex:0 0 auto;
-}
-.miniMeta{
-margin-top:6px;
-font-size:13px;
-font-weight:900;
-color: rgba(15,23,42,.55);
-letter-spacing:.2px;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
-}
-@media (max-width:420px){
-price{font-size:24px}
-.statusBelow{font-size:14px; padding:7px 10px;}
-.miniMeta{font-size:12px;}
-}
-.descBox{
-margin-top:12px;
-background: rgba(255,255,255,.92);
-border: 2px solid rgba(59,130,246,.35);
-border-radius: 18px;
-box-shadow: 0 10px 22px rgba(0,0,0,.08);
-padding:12px 12px;
-}
-.descText{
-font-weight:950;
-color: rgba(15,23,42,.92);
-line-height:1.45;
-white-space:pre-wrap;
-word-break:break-word;
-}
-.descEmpty{
-color: rgba(15,23,42,.55);
-font-weight:900;
-}
-.gridInfo{
-margin-top:14px;
-display:grid;
-grid-template-columns: 1fr;
-gap:10px;
-}
-@media(min-width:900px){
-.gridInfo{grid-template-columns: repeat(3, 1fr);}
-}
-.infoBox{
-background: rgba(15,23,42,.05);
-border:1px solid rgba(15,23,42,.06);
-border-radius: 18px;
-padding:12px 12px;
-display:flex; justify-content:space-between; gap:10px;
-font-weight:1100;
-}
-.k{color:rgba(15,23,42,.55); font-weight:900;}
-.v{color:rgba(15,23,42,.95); font-weight:1100; text-align:right; white-space:pre-wrap;}
-.errorBox{
-margin-top:14px;
-padding:14px;
-border-radius: 18px;
-background: rgba(255,255,255,.7);
-border:1px solid rgba(255,255,255,.65);
-font-weight:1100;
-color:#8b1d1d;
-display:none;
-}
-.skeleton{
-background: linear-gradient(90deg, rgba(255,255,255,.55), rgba(255,255,255,.25), rgba(255,255,255,.55));
-background-size: 200% 100%;
-animation: shimmer 1.2s infinite linear;
-}
-@keyframes shimmer{
-0%{background-position: 200% 0;}
-100%{background-position: -200% 0;}
-}
-.pageLoader{
-position:fixed;
-inset:0;
-display:flex;
-align-items:center;
-justify-content:center;
-background: radial-gradient(ellipse at top, rgba(255,255,255,.25), rgba(255,255,255,0) 55%) , var(--bg);
-z-index:99999;
-}
-.loaderPanel{
-text-align:center;
-padding:18px 22px;
-border-radius: 26px;
-background: rgba(255,255,255,.18);
-border: 1px solid var(--line);
-backdrop-filter: blur(10px);
-box-shadow: 0 18px 40px rgba(0,0,0,.16);
-max-width: 92vw;
-}
-.loaderEmojis{
-display:flex;
-gap:18px;
-justify-content:center;
-align-items:center;
-font-size:52px;
-line-height:1;
-filter: drop-shadow(0 10px 20px rgba(0,0,0,.18));
-}
-.loaderEmojis span{
-display:inline-block;
-animation: bounce 0.9s ease-in-out infinite;
-}
-.loaderEmojis span:nth-child(2){ animation-delay: .12s; }
-.loaderEmojis span:nth-child(3){ animation-delay: .24s; }
-@keyframes bounce{
-0%,100%{ transform: translateY(0); opacity:.95; }
-50%{ transform: translateY(-12px); opacity:1; }
-}
-.loaderText{
-margin-top:12px;
-font-weight:1100;
-letter-spacing:.6px;
-color: rgba(15,23,42,.92);
-text-shadow: 0 10px 22px rgba(0,0,0,.10);
-font-size:22px;
-white-space:nowrap;
-}
-@media (max-width:420px){
-.loaderEmojis{font-size:44px}
-.loaderText{font-size:18px}
-}
-.navArrow{
-position:absolute;
-top:50%;
-transform: translateY(-50%);
-width:54px;
-height:54px;
-border-radius: 999px;
-border:1px solid rgba(255,255,255,.55);
-background: rgba(255,255,255,.22);
-backdrop-filter: blur(8px);
-box-shadow: 0 10px 22px rgba(0,0,0,.14);
-display:grid;
-place-items:center;
-cursor:pointer;
-user-select:none;
-z-index:5;
-}
-.navArrow:active{ transform: translateY(-50%) scale(.98); }
-.navArrow svg{
-width:24px;height:24px;
-stroke: rgba(255,255,255,.95);
-opacity:.95;
-}
-.navLeft{ left:14px; }
-.navRight{ right:14px; }
-@media (max-width:420px){
-.navArrow{ width:48px;height:48px; }
-.navArrow svg{ width:22px;height:22px; }
-}
-.otherSection{
-margin-top:14px;
-padding:14px;
-border-radius: 18px;
-background: rgba(255,255,255,.65);
-border: 1px solid rgba(255,255,255,.65);
-}
-.otherTitle{
-font-weight:1100;
-letter-spacing:.3px;
-color: rgba(15,23,42,.88);
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:10px;
-}
-.otherHint{
-font-weight:900;
-color: rgba(15,23,42,.55);
-font-size:12px;
-white-space:nowrap;
-}
-.otherGrid{
-margin-top:12px;
-display:grid;
-grid-template-columns: repeat(2, minmax(0, 1fr));
-gap:12px;
-}
-.otherCard{
-border-radius: 18px;
-background: rgba(255,255,255,.92);
-border: 1px solid rgba(15,23,42,.06);
-box-shadow: 0 10px 22px rgba(0,0,0,.08);
-overflow:hidden;
-cursor:pointer;
-user-select:none;
-transition: transform .12s ease;
-}
-.otherCard:active{ transform: scale(.985); }
-.otherImg{
-width:100%;
-aspect-ratio: 16/10;
-object-fit:cover;
-display:block;
-background:#e8f0fb;
-}
-.otherBody{
-padding:10px 10px 12px;
-display:flex;
-flex-direction:column;
-gap:6px;
-}
-.otherTopRow{
-display:flex;
-align-items:flex-start;
-justify-content:space-between;
-gap:8px;
-flex-wrap:wrap;
-}
-.otherPlot{
-font-weight:1100;
-font-size:13px;
-color: rgba(15,23,42,.95);
-white-space:normal;
-overflow:visible;
-text-overflow:clip;
-flex:1 1 auto;
-min-width:0;
-}
-.otherStatus{
-padding:5px 8px;
-border-radius: 999px;
-font-weight:1100;
-font-size:11px;
-background: rgba(255,255,255,.92);
-border: 2px solid rgba(15,23,42,.15);
-color: rgba(15,23,42,.88);
-white-space:nowrap;
-flex:0 0 auto;
-}
-.otherPrice{
-font-weight:1100;
-font-size:16px;
-color: rgba(15,23,42,.92);
-white-space:nowrap;
-}
-.otherId{
-font-weight:600;
-font-size:11px;
-letter-spacing:-0.2px;
-color: rgba(15,23,42,.55);
-white-space:nowrap;
-overflow:hidden;
-text-overflow:clip;
-}
-@media (max-width: 420px) {
-.otherId { font-size: 9.5px; }
-}
-.shareSection{
-margin-top:14px;
-padding:14px;
-border-radius: 18px;
-background: rgba(255,255,255,.65);
-border: 1px solid rgba(255,255,255,.65);
-}
-.shareTopIcon{
-display:flex;
-justify-content:center;
-align-items:center;
-padding:8px 0 10px;
-opacity:.85;
-}
-.shareRow{
-display:flex;
-gap:14px;
-justify-content:center;
-overflow:auto;
-padding:10px 8px 6px;
-scroll-snap-type: x mandatory;
--webkit-overflow-scrolling: touch;
-}
-.shareBtn{
-flex:0 0 auto;
-width:58px;
-scroll-snap-align:center;
-border:0;
-background:transparent;
-cursor:pointer;
-text-align:center;
-user-select:none;
-}
-.shareCircle{
-width:52px; height:52px;
-border-radius:999px;
-background: rgba(255,255,255,.9);
-border: 1px solid rgba(15,23,42,.08);
-box-shadow: 0 10px 22px rgba(0,0,0,.10);
-display:grid;
-place-items:center;
-margin:0 auto;
-}
-.shareLbl{
-margin-top:6px;
-font-size:11px;
-font-weight:900;
-color: rgba(15,23,42,.65);
-white-space:nowrap;
-}
-.shareBtn:active .shareCircle{ transform: scale(.97); }
-#shareCanvas{ display:none; }
-.fbVisitWrap{
-margin-top: 10px;
-display:flex;
-justify-content:center;
-}
-.fbVisitBtn{
-width:min(640px, 100%);
-display:flex;
-align-items:center;
-justify-content:center;
-gap:10px;
-padding: 12px 14px;
-border-radius: 18px;
-text-decoration:none;
-font-weight:1100;
-letter-spacing:.2px;
-background: rgba(255,255,255,.90);
-border: 2px solid rgba(59,130,246,.55);
-box-shadow: 0 10px 22px rgba(0,0,0,.10);
-color:#1d4ed8;
-user-select:none;
-cursor:pointer;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
-}
-.fbVisitBtn:active{ transform: scale(.99); }
-.fbVisitIcon{
-width:28px; height:28px;
-border-radius: 12px;
-display:grid;
-place-items:center;
-flex:0 0 auto;
-background: rgba(29,78,216,.10);
-}
-.fbVisitBtn.hidden{ display:none; }
-.mapSection{
-margin-top: 12px;
-display:none;
-}
-.mapCard{
-width:min(900px, 100%);
-margin: 0 auto;
-border-radius: 18px;
-overflow:hidden;
-border: 1px solid rgba(255,255,255,.65);
-box-shadow: 0 10px 22px rgba(0,0,0,.10);
-background: rgba(255,255,255,.92);
-}
-.mapHead{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:10px;
-padding:10px 12px;
-border-bottom: 1px solid rgba(15,23,42,.08);
-}
-.mapTitle{
-font-weight:1100;
-color: rgba(15,23,42,.88);
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
-}
-.mapActions{
-display:flex;
-gap:8px;
-flex-wrap:wrap;
-justify-content:flex-end;
-}
-.mapBtn{
-display:inline-flex;
-align-items:center;
-justify-content:center;
-gap:8px;
-padding:8px 10px;
-border-radius: 14px;
-text-decoration:none;
-font-weight:1100;
-font-size:12px;
-background: rgba(255,255,255,.92);
-border: 1px solid rgba(15,23,42,.12);
-box-shadow: 0 10px 20px rgba(0,0,0,.08);
-color: rgba(15,23,42,.92);
-user-select:none;
-}
-.mapBtn:active{ transform: scale(.99); }
-.mapBtnPrimary{
-border-color: rgba(59,130,246,.45);
-color:#1d4ed8;
-}
-.mapFrame{
-width:100%;
-height: 320px;
-border:0;
-display:block;
-background:#e8f0fb;
-}
-@media (max-width:420px){
-.mapFrame{ height: 260px; }
-.mapBtn{ font-size:11px; padding:8px 9px; }
-}
-.wrap{ padding-bottom: 92px; }
-.bottomDock{
-position:fixed;
-left:0; right:0; bottom:0;
-z-index:9999;
-padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
-background: rgba(255,255,255,.40);
-backdrop-filter: blur(14px);
-border-top: 1px solid rgba(255,255,255,.55);
-}
-.dockInner{
-max-width:1100px;
-margin:0 auto;
-display:grid;
-grid-template-columns: repeat(3, minmax(0, 1fr));
-gap:10px;
-}
-.dockBtn{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:8px;
-padding: 12px 10px;
-border-radius: 18px;
-text-decoration:none;
-font-weight: 1100;
-letter-spacing:.2px;
-background: rgba(255,255,255,.78);
-border: 1px solid rgba(15,23,42,.10);
-box-shadow: 0 10px 22px rgba(0,0,0,.10);
-color: rgba(15,23,42,.92);
-user-select:none;
-cursor:pointer;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
-}
-.dockBtn:active{ transform: scale(.99); }
-.dockIcon{
-width:26px; height:26px;
-border-radius: 12px;
-display:grid;
-place-items:center;
-font-size:14px;
-flex:0 0 auto;
-background: rgba(15,23,42,.08);
-}
-.dockBtn.disabled{
-opacity:.42;
-pointer-events:none;
-}
-@media (max-width:420px){
-.dockBtn{ padding:11px 8px; border-radius:16px; font-size:12px; }
-.dockIcon{ width:24px; height:24px; border-radius:11px; }
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>smart properties system · details</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body{font-family:Kanit,sans-serif}
+    .glass{
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.28);
+      backdrop-filter: blur(10px);
+    }
+    .card{
+      background:rgba(255,255,255,.92);
+      border:1px solid rgba(255,255,255,.75);
+      box-shadow: 0 18px 40px rgba(0,0,0,.12);
+    }
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;
+      font-weight:900;font-size:12px;
+      border:1px solid rgba(255,255,255,.65);
+      box-shadow: 0 10px 18px rgba(0,0,0,.10);
+      backdrop-filter: blur(6px);
+      max-width: 100%;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .mini{
+      display:grid;place-items:center;
+      border-radius: 20px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 14px;
+      text-align:center;
+    }
+    .mini .k{font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#94a3b8}
+    .mini .v{font-size:18px;font-weight:900;color:#0f172a;margin-top:6px}
+    .btn{
+      border-radius: 18px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-size: 11px;
+      padding: 12px 14px;
+    }
+    .btn:active{transform:scale(.98)}
+  </style>
 </head>
-<body>
-<div class="pageLoader" id="pageLoader" aria-label="loading">
-<div class="loaderPanel">
-<div class="loaderEmojis" aria-hidden="true">
-<span>🏠</span><span>✨</span><span>🌴</span>
-</div>
-<div class="loaderText">Smart Properties System</div>
-</div>
-</div>
 
-<div class="wrap">
-<div class="topbar">
-<div class="brand">
-  <a class="logo" id="homeLink" href="index.html" aria-label="Home">
-    <svg viewBox="0 0 24 24" fill="none" stroke="rgba(15,23,42,.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M3 10.5L12 3l9 7.5"></path>
-      <path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"></path>
-    </svg>
-  </a>
+<body class="min-h-screen bg-slate-900 italic">
+  <div class="max-w-5xl mx-auto p-4 md:p-10">
+    <!-- Header -->
+    <div class="rounded-[2.5rem] p-6 sm:p-8 md:p-10 text-white shadow-2xl glass">
+      <div class="flex items-start justify-between gap-4">
+        <div class="min-w-0">
+          <p class="text-white/80 font-extrabold uppercase tracking-[0.25em] text-xs">Property Detail</p>
+          <h1 id="hpTitle" class="text-3xl sm:text-4xl font-extrabold tracking-tight mt-2 truncate">HP-XXXX</h1>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <span id="badgeSys" class="badge bg-white/80 text-slate-900">System: -</span>
+            <span id="badgeStatus" class="badge bg-white/80 text-slate-900">Status: -</span>
+          </div>
+        </div>
 
-<div class="titles">
-<h1 id="pageTitle">Detail Plot: -</h1>
-<div class="sub" id="subTitle">Details · ...</div>
-</div>
-</div>
-<button class="backBtn" id="btnBack">←</button>
-</div>
+        <div class="flex gap-2">
+          <a id="btnBack" class="btn bg-white/10 hover:bg-white/20 text-white" href="index.html">Back</a>
+          <a id="btnEdit" class="btn bg-emerald-600 hover:bg-emerald-500 text-white hidden" href="#">Edit</a>
+        </div>
+      </div>
+    </div>
 
-<div class="errorBox" id="errBox"></div>
+    <!-- Not available -->
+    <div id="notAvailable" class="hidden mt-6 card rounded-[2rem] p-8 text-center">
+      <div class="text-2xl font-extrabold text-slate-900 mb-2">รายการนี้ยังไม่เปิดออนไลน์</div>
+      <div class="text-slate-500 font-bold text-sm">System Status ไม่ใช่ Live</div>
+      <div class="mt-4 flex justify-center gap-2">
+        <a class="btn bg-slate-900 hover:bg-blue-600 text-white" href="index.html">Go Index</a>
+        <a id="btnGoGateway" class="btn bg-white text-slate-900 border border-slate-200" href="gateway.html">Login</a>
+      </div>
+    </div>
 
-<div class="card" id="mainCard">
-<div class="gallery" id="gallery">
-<img class="mainSlide skeleton" id="mainImg" alt="main" />
-<div class="tagTopLeft" id="tagPlot">-</div>
-<div class="tagBottomRight" id="tagCount">0 / 0</div>
+    <!-- Content -->
+    <div id="content" class="hidden">
+      <!-- Gallery -->
+      <div class="mt-6 card rounded-[2rem] overflow-hidden">
+        <div class="aspect-[16/10] bg-slate-100" id="coverBox">
+          <div class="w-full h-full grid place-items-center text-5xl">🖼️</div>
+        </div>
+        <div class="p-5">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="thumbs"></div>
+        </div>
+      </div>
 
-<div class="navArrow navLeft" id="btnPrev" aria-label="previous">
-<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-<path d="M15 18l-6-6 6-6"></path>
-</svg>
-</div>
-<div class="navArrow navRight" id="btnNext" aria-label="next">
-<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-<path d="M9 6l6 6-6 6"></path>
-</svg>
-</div>
-</div>
+      <!-- Quick facts -->
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="mini">
+          <div class="k">Price</div>
+          <div class="v" id="vPrice">฿0</div>
+        </div>
+        <div class="mini">
+          <div class="k">Beds / Baths</div>
+          <div class="v"><span id="vBed">-</span> / <span id="vBath">-</span></div>
+        </div>
+        <div class="mini">
+          <div class="k">Living Area</div>
+          <div class="v"><span id="vLiving">-</span> m²</div>
+        </div>
+      </div>
 
-<div class="thumbStrip" id="thumbStrip"></div>
+      <!-- Data -->
+      <div class="mt-6 card rounded-[2rem] p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <div class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">Plot / Type</div>
+            <div class="text-xl font-extrabold text-slate-900 mt-1">
+              <span id="vPlot">-</span> · <span id="vType">-</span>
+            </div>
+            <div class="text-slate-500 font-bold text-sm mt-1" id="vProjectName"></div>
+            <div class="text-slate-500 font-bold text-sm mt-2" id="vAddress"></div>
+          </div>
 
-<div class="content">
-<div class="headRow">
-<div class="hp" id="hpText">...</div>
-<div class="price" id="priceText">฿0</div>
-<div class="statusBelow" id="statusBelow">-</div>
-</div>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="mini">
+              <div class="k">Land</div>
+              <div class="v"><span id="vLandW">-</span> sq.w</div>
+              <div class="text-xs font-bold text-slate-400 mt-1"><span id="vLandM">-</span> sq.m</div>
+            </div>
+            <div class="mini">
+              <div class="k">Pool</div>
+              <div class="v"><span id="vPoolSize">-</span></div>
+              <div class="text-xs font-bold text-slate-400 mt-1"><span id="vPoolDepth">-</span></div>
+            </div>
+            <div class="mini">
+              <div class="k">Furnishing</div>
+              <div class="v" id="vFurn">-</div>
+            </div>
+            <div class="mini">
+              <div class="k">Zone</div>
+              <div class="v" id="vZone">-</div>
+            </div>
+          </div>
+        </div>
 
-<div class="miniMeta" id="miniMeta">Land - · Living -</div>
+        <div class="mt-5 border-t pt-5">
+          <div class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">Description</div>
+          <div class="mt-2 text-slate-700 font-medium leading-relaxed whitespace-pre-wrap" id="vDesc">-</div>
+        </div>
+      </div>
 
-<div class="descBox" id="descBox">
-<div class="descText" id="descText">-</div>
-</div>
+      <!-- Links -->
+      <div class="mt-6 card rounded-[2rem] p-6">
+        <div class="flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <div class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">External Links</div>
+            <div class="text-xl font-extrabold text-slate-900 mt-1">Open / Download</div>
+          </div>
+          <div class="flex gap-2 flex-wrap">
+            <a id="lnkFB" class="btn bg-blue-600 hover:bg-blue-500 text-white hidden" target="_blank" rel="noopener">FB</a>
+            <a id="lnkVT" class="btn bg-purple-600 hover:bg-purple-500 text-white hidden" target="_blank" rel="noopener">Virtual Tour</a>
+            <a id="lnkMap" class="btn bg-emerald-600 hover:bg-emerald-500 text-white hidden" target="_blank" rel="noopener">Map</a>
+          </div>
+        </div>
 
-<div class="gridInfo" id="infoGrid"></div>
+        <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <a id="pdfSales" class="btn bg-slate-900 hover:bg-blue-600 text-white hidden" target="_blank" rel="noopener">Sales PDF</a>
+          <a id="pdfMat" class="btn bg-slate-900 hover:bg-blue-600 text-white hidden" target="_blank" rel="noopener">Material PDF</a>
+          <a id="pdfFloor" class="btn bg-slate-900 hover:bg-blue-600 text-white hidden" target="_blank" rel="noopener">Floor Plan</a>
+        </div>
 
-<div class="shareSection" id="shareSection">
-<div class="shareTopIcon" aria-hidden="true" title="Share">
-<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(15,23,42,.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-<circle cx="18" cy="5" r="2"></circle>
-<circle cx="6" cy="12" r="2"></circle>
-<circle cx="18" cy="19" r="2"></circle>
-<path d="M8 12l8-7"></path>
-<path d="M8 12l8 7"></path>
-</svg>
-</div>
-
-<div class="shareRow" id="shareRow">
-  <!-- (คงปุ่ม share เดิมของคุณทั้งหมด) -->
-</div>
-
-<div class="fbVisitWrap">
-<a id="fbVisitBtn" class="fbVisitBtn hidden" href="#" target="_blank" rel="noopener">
-<span class="fbVisitIcon" aria-hidden="true">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2">
-<path d="M22 12.06C22 6.504 17.523 2 12 2S2 6.504 2 12.06C2 17.082 5.657 21.245 10.438 22v-7.03H7.898v-2.91h2.54V9.845c0-2.522 1.492-3.916 3.777-3.916 1.094 0 2.238.196 2.238.196v2.475h-1.26c-1.243 0-1.63.776-1.63 1.57v1.89h2.773l-.443 2.91h-2.33V22C18.343 21.245 22 17.082 22 12.06z"/>
-</svg>
-</span>
-<span id="fbVisitText">Visit our Facebook Page</span>
-</a>
-</div>
-
-<div class="mapSection" id="mapSection">
-<div class="mapCard">
-  <div class="mapHead">
-    <div class="mapTitle">Map & Navigation</div>
-    <div class="mapActions">
-      <a class="mapBtn" id="mapOpenBtn" href="#" target="_blank" rel="noopener">Open Map</a>
-      <a class="mapBtn mapBtnPrimary" id="mapNavBtn" href="#" target="_blank" rel="noopener">Navigate</a>
+        <div id="mapFrameWrap" class="hidden mt-5 overflow-hidden rounded-[1.75rem] border border-slate-200">
+          <iframe id="mapFrame" class="w-full h-[360px]" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
     </div>
   </div>
-  <iframe
-    id="mapFrame"
-    class="mapFrame"
-    loading="lazy"
-    referrerpolicy="no-referrer-when-downgrade"
-    allowfullscreen
-    src=""
-    title="Google Map">
-  </iframe>
-</div>
-</div>
 
-<canvas id="shareCanvas" width="1200" height="630"></canvas>
-</div>
+  <script>
+    /**********************************************************
+     * CONFIG (Web App URL ใหม่ของคุณ)
+     **********************************************************/
+    const API_URL = "https://script.google.com/macros/s/AKfycbyTeJrl7A5D6nSjcxBsMAmfT0YcopmjMqI5YuXZ65FOXnWziWwe_j1FocdlaWWlQePR/exec";
 
-<div class="otherSection" id="otherSection">
-<div class="otherTitle">
-<div>Other Plots</div>
-<div class="otherHint">Tap to view details</div>
-</div>
-<div class="otherGrid" id="otherGrid"></div>
-</div>
+    const params = new URLSearchParams(location.search);
+    const HP_ID = (params.get("id") || "").trim();
+    const PROJECT = (params.get("project") || "HP00").trim();
 
-</div>
-</div>
-</div>
+    const TOKEN = (params.get("token") || localStorage.getItem("HP_AUTH_TOKEN") || "").trim();
+    const ROLE  = (localStorage.getItem("HP_AUTH_ROLE") || "").trim();
 
-<div class="bottomDock" id="bottomDock" aria-label="Downloads">
-<div class="dockInner">
-<a class="dockBtn disabled" id="dockSales" href="#" target="_blank" rel="noopener">
-<span class="dockIcon">📄</span>
-<span>Sales PDF</span>
-</a>
-<a class="dockBtn disabled" id="dockMaterial" href="#" target="_blank" rel="noopener">
-<span class="dockIcon">📄</span>
-<span>Material PDF</span>
-</a>
-<a class="dockBtn disabled" id="dockFloorplan" href="#" target="_blank" rel="noopener">
-<span class="dockIcon">📄</span>
-<span>Floor Plan</span>
-</a>
-</div>
-</div>
+    const $ = (id)=>document.getElementById(id);
 
-<script>
-/** =========================
-* CONFIG (ให้เหมือนหน้า index)
-* ========================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxc76n6YKLUCCHZZR12c5K4_0k40gHa2ZzDMVZn29BElQlSO3X6O8B7dFIFi0bEukqJ/exec";
-const qs = new URLSearchParams(location.search);
+    function esc(s){ return String(s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+    function fmtPrice(v){
+      const n = Number(String(v||"").replace(/,/g,""));
+      if (!isFinite(n) || n<=0) return "฿0";
+      return "฿" + n.toLocaleString("en-US");
+    }
+    function normSys(v){
+      const low = String(v||"").trim().toLowerCase();
+      if(low==="live") return "Live";
+      if(low==="pending") return "Pending";
+      if(low==="offline") return "Offline";
+      return String(v||"").trim();
+    }
+    function isLive(v){ return normSys(v) === "Live"; }
 
-// ✅ รับ id ได้ทั้ง id หรือ hpId
-const hpId = (qs.get("id") || qs.get("hpId") || "").trim();
+    // JSONP helper
+    function jsonp_(paramsObj, timeoutMs = 15000){
+      return new Promise((resolve, reject) => {
+        const cbName = "cb_" + Math.random().toString(16).slice(2);
+        const urlParams = new URLSearchParams();
+        Object.entries(paramsObj||{}).forEach(([k,v])=>{
+          if(v===undefined || v===null) return;
+          urlParams.set(k, String(v));
+        });
+        urlParams.set("callback", cbName);
+        urlParams.set("t", Date.now());
 
-// ✅ เปลี่ยนค่า default เป็น HP02 และรองรับ ?project=HP02
-const project = (qs.get("project") || "HP02").trim() || "HP02";
+        const script = document.createElement("script");
+        let done = false;
 
-// ✅ ลิงก์ Home กลับ index พร้อม project
-(function setHomeLink(){
-  const a = document.getElementById("homeLink");
-  if(!a) return;
-  a.href = `index.html?project=${encodeURIComponent(project)}`;
-})();
+        const timer = setTimeout(()=>{
+          if(done) return;
+          done = true;
+          cleanup();
+          reject(new Error("JSONP timeout"));
+        }, timeoutMs);
 
-/** Loader helpers */
-function showLoader(){
-  const el = document.getElementById("pageLoader");
-  if(el) el.style.display = "flex";
-}
-function hideLoader(){
-  const el = document.getElementById("pageLoader");
-  if(el) el.style.display = "none";
-}
+        function cleanup(){
+          clearTimeout(timer);
+          try{ delete window[cbName]; }catch(e){ window[cbName]=undefined; }
+          if(script && script.parentNode) script.parentNode.removeChild(script);
+        }
 
-/** JSONP (เหมือนหน้า index) */
-function jsonp(url, timeoutMs = 20000){
-  return new Promise((resolve, reject) => {
-    const cb = "cb_" + Math.random().toString(36).slice(2);
-    const script = document.createElement("script");
-    let done = false;
+        window[cbName] = (data)=>{
+          if(done) return;
+          done = true;
+          cleanup();
+          resolve(data);
+        };
 
-    const timer = setTimeout(() => {
-      if(done) return;
-      done = true;
-      cleanup();
-      reject(new Error("timeout"));
-    }, timeoutMs);
+        script.onerror = ()=>{
+          if(done) return;
+          done = true;
+          cleanup();
+          reject(new Error("JSONP network error"));
+        };
 
-    function cleanup(){
-      clearTimeout(timer);
-      if (script.parentNode) script.parentNode.removeChild(script);
-      try{ delete window[cb]; }catch(e){ window[cb]=undefined; }
+        script.src = API_URL + "?" + urlParams.toString();
+        document.body.appendChild(script);
+      });
     }
 
-    window[cb] = (data) => {
-      if(done) return;
-      done = true;
-      cleanup();
-      resolve(data);
-    };
-
-    const sep = url.includes("?") ? "&" : "?";
-    script.src = url + sep + "callback=" + encodeURIComponent(cb);
-    script.onerror = () => {
-      if(done) return;
-      done = true;
-      cleanup();
-      reject(new Error("jsonp_error"));
-    };
-    document.body.appendChild(script);
-  });
-}
-
-function showError(msg){
-  const box = document.getElementById("errBox");
-  box.style.display = "block";
-  box.innerHTML = "";
-  const p = document.createElement("div");
-  p.textContent = msg;
-  box.appendChild(p);
-}
-function hideError(){
-  const box = document.getElementById("errBox");
-  box.style.display = "none";
-  box.textContent = "";
-}
-
-function toNumber(x){
-  const s = String(x ?? "").replace(/,/g,"").trim();
-  const n = Number(s);
-  return Number.isFinite(n) ? n : 0;
-}
-function moneyTHB(x){
-  const n = toNumber(x);
-  return "฿" + n.toLocaleString("en-US");
-}
-
-function cleanDriveImage(url){
-  const u = String(url || "").trim();
-  if(!u) return "";
-  if (u.includes("lh3.googleusercontent.com/d/")) return u;
-  let id = "";
-  const m1 = u.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if (m1) id = m1[1];
-  const m2 = u.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-  if (!id && m2) id = m2[1];
-  const m3 = u.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-  if (!id && m3) id = m3[1];
-  if (id) return "https://lh3.googleusercontent.com/d/" + id;
-  return u;
-}
-
-function statusStyle(statusRaw){
-  const s = String(statusRaw||"").trim().toLowerCase();
-  if (s.includes("available")) return {border:"rgba(16,185,129,.65)", text:"rgba(5,150,105,1)"};
-  if (s.includes("under")) return {border:"rgba(14,165,233,.55)", text:"rgba(2,132,199,1)"};
-  if (s.includes("reserved")) return {border:"rgba(245,158,11,.55)", text:"rgba(180,83,9,1)"};
-  if (s.includes("sold")) return {border:"rgba(244,63,94,.55)", text:"rgba(190,18,60,1)"};
-  return {border:"rgba(15,23,42,.25)", text:"rgba(15,23,42,.92)"};
-}
-
-document.getElementById("btnBack").addEventListener("click", () => {
-  // ✅ กลับ index พร้อม project
-  history.length > 1 ? history.back() : (location.href = `index.html?project=${encodeURIComponent(project)}`);
-});
-
-let images = [];
-let idx = 0;
-let CURRENT_DETAIL = null;
-
-function setMain(i){
-  idx = Math.max(0, Math.min(i, images.length-1));
-  const mainImg = document.getElementById("mainImg");
-  mainImg.classList.remove("skeleton");
-  mainImg.src = images[idx] || mainImg.src;
-  document.getElementById("tagCount").textContent = `${idx+1} / ${images.length || 0}`;
-  document.querySelectorAll(".thumb").forEach((t, k)=> t.classList.toggle("active", k===idx));
-}
-
-function renderThumbs(){
-  const strip = document.getElementById("thumbStrip");
-  strip.innerHTML = "";
-  images.forEach((src, i)=>{
-    const im = document.createElement("img");
-    im.className = "thumb" + (i===idx ? " active": "");
-    im.src = src;
-    im.loading = "lazy";
-    im.decoding = "async";
-    im.addEventListener("click", ()=>setMain(i));
-    strip.appendChild(im);
-  });
-}
-
-function enableSwipe(){
-  const gallery = document.getElementById("gallery");
-  let startX = 0, dx = 0;
-  gallery.addEventListener("touchstart", (e)=>{
-    startX = e.touches[0].clientX;
-    dx = 0;
-  }, {passive:true});
-  gallery.addEventListener("touchmove", (e)=>{
-    dx = e.touches[0].clientX - startX;
-  }, {passive:true});
-  gallery.addEventListener("touchend", ()=>{
-    if(Math.abs(dx) < 35) return;
-    if(dx < 0) setMain(idx+1);
-    else setMain(idx-1);
-  });
-}
-
-function safeText(v){
-  const s = String(v ?? "").trim();
-  return s === "" ? "-" : s;
-}
-function pick(obj, keys){
-  for (const k of keys){
-    if (obj && obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== "") return obj[k];
-  }
-  return "";
-}
-function fmtSqm(v){
-  const s = safeText(v);
-  if(s === "-") return "-";
-  const low = s.toLowerCase();
-  if (low.includes("sq") || low.includes("ตร.ม") || low.includes("m2") || low.includes("m²")) return s;
-  return s + " sq.m";
-}
-const LAND_SQM_KEYS = ["Land_Area_sq_m","Land_Area_SQM","Land Area (sq.m)","Land Area (sqm)","Land Area sqm","Land Area sq.m","landSqm","land_sqm"];
-const LIVING_SQM_KEYS = ["Living_Area_sq_m","Living_Area_SQM","Living Area (sq.m)","Living Area (sqm)","Living Area sqm","Living Area sq.m","livingSqm","living_sqm"];
-
-function renderDescription(detail){
-  const desc = safeText(pick(detail, ["Description","description","Desc","desc"]));
-  const box = document.getElementById("descBox");
-  const el = document.getElementById("descText");
-  if(!box || !el) return;
-  if(desc === "-" ){
-    box.style.display = "none";
-    return;
-  }
-  box.style.display = "block";
-  el.textContent = desc;
-  el.classList.remove("descEmpty");
-}
-function renderMiniMeta(detail){
-  const landM = fmtSqm(pick(detail, LAND_SQM_KEYS));
-  const livingM = fmtSqm(pick(detail, LIVING_SQM_KEYS));
-  const el = document.getElementById("miniMeta");
-  if(!el) return;
-  el.textContent = `Land ${landM} · Living ${livingM}`;
-}
-
-function pickMapLink(detail){
-  const keys = ["Map_Link","MapLink","GoogleMap","Google_Maps","Map","Location","Location_Link","map","map_link"];
-  for(const k of keys){
-    const v = detail ? detail[k] : "";
-    const s = String(v ?? "").trim();
-    if(s && s !== "-") return s;
-  }
-  return "";
-}
-function normalizeMapLink(link){
-  const s = String(link || "").trim();
-  return s && s !== "-" ? s : "";
-}
-function buildEmbedUrl(link){
-  const raw = normalizeMapLink(link);
-  if(!raw) return "";
-  if (raw.includes("google.com/maps/embed")) return raw;
-  return `https://www.google.com/maps?q=${encodeURIComponent(raw)}&output=embed`;
-}
-function buildOpenUrl(link){
-  const raw = normalizeMapLink(link);
-  if(!raw) return "";
-  if (raw.includes("google.com/maps")) return raw;
-  if (raw.startsWith("http")) return raw;
-  return `https://www.google.com/maps?q=${encodeURIComponent(raw)}`;
-}
-function buildNavUrl(link){
-  const raw = normalizeMapLink(link);
-  if(!raw) return "";
-  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(raw)}`;
-}
-function setMapSection(link){
-  const sec = document.getElementById("mapSection");
-  const frame = document.getElementById("mapFrame");
-  const openBtn = document.getElementById("mapOpenBtn");
-  const navBtn = document.getElementById("mapNavBtn");
-  if(!sec || !frame || !openBtn || !navBtn) return;
-
-  const raw = normalizeMapLink(link);
-  if(!raw){
-    sec.style.display = "none";
-    frame.src = "";
-    openBtn.href = "#";
-    navBtn.href = "#";
-    return;
-  }
-  sec.style.display = "block";
-  openBtn.href = buildOpenUrl(raw);
-  navBtn.href = buildNavUrl(raw);
-  frame.src = buildEmbedUrl(raw);
-  frame.onerror = () => { frame.src = ""; };
-}
-
-function renderInfo(detail){
-  const grid = document.getElementById("infoGrid");
-  const items = [
-    ["Project_Name", safeText(pick(detail, ["Project_Name","ProjectName","Project","projectName","project"]))],
-    ["District", safeText(pick(detail, ["District","district"]))],
-    ["SubDistrict", safeText(pick(detail, ["SubDistrict","Sub_District","subdistrict"]))],
-    ["Badge", safeText(pick(detail, ["Badge","badge"]))],
-    ["Bedrooms", safeText(pick(detail, ["Bedrooms","Bedroom","beds","bedrooms"]))],
-    ["Bathrooms", safeText(pick(detail, ["Bathrooms","Bathroom","baths","bathrooms"]))],
-    ["Land Area (sq.m)", safeText(pick(detail, LAND_SQM_KEYS))],
-    ["Living Area (sq.m)", safeText(pick(detail, LIVING_SQM_KEYS))],
-    ["Pool Size", safeText(pick(detail, ["Pool_Size","PoolSize","poolSize"]))],
-    ["Pool Depth", safeText(pick(detail, ["Pool_Depth","PoolDepth","poolDepth"]))],
-    ["Furnishing", safeText(pick(detail, ["Furnishing","furnishing"]))],
-    ["Price_SQM", safeText(pick(detail, ["Price_SQM","PriceSQM","priceSqm"]))],
-    ["Status", safeText(pick(detail, ["Status","status"]))],
-    ["Parking", safeText(pick(detail, ["Parking","parking"]))],
-    ["Extras", safeText(pick(detail, ["Extras","extras"]))],
-    ["Electricity", safeText(pick(detail, ["Electricity","electricity"]))],
-  ];
-  grid.innerHTML = "";
-  for(const [k,v] of items){
-    const box = document.createElement("div");
-    box.className = "infoBox";
-    box.innerHTML = `<div class="k">${k}</div><div class="v">${v}</div>`;
-    grid.appendChild(box);
-  }
-}
-
-function normalizeLink(v){
-  const s = String(v ?? "").trim();
-  return s && s !== "-" ? s : "";
-}
-function setDockLink(elId, link){
-  const el = document.getElementById(elId);
-  if(!el) return;
-  const href = normalizeLink(link);
-  if(!href){
-    el.classList.add("disabled");
-    el.setAttribute("href", "#");
-    return;
-  }
-  el.classList.remove("disabled");
-  el.setAttribute("href", href);
-}
-
-function pickFbLink(detail){
-  const keys = ["FB_Link","FBLink","FB_LINK","facebook","Facebook","FB","fb","fb_link"];
-  for(const k of keys){
-    const v = detail ? detail[k] : "";
-    const s = String(v ?? "").trim();
-    if(s && s !== "-") return s;
-  }
-  return "";
-}
-function setFbVisitBar(link){
-  const a = document.getElementById("fbVisitBtn");
-  if(!a) return;
-  const href = normalizeLink(link);
-  if(!href){
-    a.classList.add("hidden");
-    a.setAttribute("href", "#");
-    return;
-  }
-  a.classList.remove("hidden");
-  a.setAttribute("href", href);
-}
-
-/** =========================
-* Other Plots (ใช้ getUnitList เหมือนหน้า index)
-* ========================= */
-function getUnitId(u){
-  return String(u?.HP_ID || u?.id || u?.hpId || u?.Unit_ID || "").trim();
-}
-function getPlot(u){
-  return String(u?.Plot || u?.plot || u?.Unit_Plot || u?.Plot_No || "").trim();
-}
-function getThumb(u){
-  return cleanDriveImage(u?.Thumbnail_Image || u?.thumbnail || u?.thumb || u?.thumbUrl || "");
-}
-function getStatus(u){
-  return String(u?.Status || u?.status || u?.unitStatus || "-").trim() || "-";
-}
-function getPrice(u){
-  return u?.Price ?? u?.price ?? 0;
-}
-
-function renderOtherUnits(units){
-  const grid = document.getElementById("otherGrid");
-  const section = document.getElementById("otherSection");
-  if(!Array.isArray(units) || units.length === 0){
-    section.style.display = "none";
-    return;
-  }
-  section.style.display = "block";
-  grid.innerHTML = "";
-  for(const u of units){
-    const id = getUnitId(u);
-    const plot = getPlot(u) || id || "-";
-    const thumb = getThumb(u);
-    const st = getStatus(u);
-    const price = moneyTHB(getPrice(u));
-    const pill = statusStyle(st);
-
-    const card = document.createElement("div");
-    card.className = "otherCard";
-    card.innerHTML = `
-      <img class="otherImg" src="${thumb || "data:image/svg+xml;charset=utf-8," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><rect width='100%' height='100%' fill='#e6edf6'/><text x='50%' y='50%' text-anchor='middle' fill='#8aa0bb' font-size='40' font-family='Arial'>no image</text></svg>")}" alt="thumb" loading="lazy" decoding="async">
-      <div class="otherBody">
-        <div class="otherTopRow">
-          <div class="otherPlot">${plot}</div>
-          <div class="otherStatus" style="border-color:${pill.border}; color:${pill.text};">${st}</div>
-        </div>
-        <div class="otherPrice">${price}</div>
-        <div class="otherId">${id}</div>
-      </div>
-    `;
-    card.addEventListener("click", ()=>{
-      location.href = `details.html?id=${encodeURIComponent(id)}&project=${encodeURIComponent(project)}`;
-    });
-    grid.appendChild(card);
-  }
-}
-
-async function loadOtherUnits(){
-  try{
-    const url = `${SCRIPT_URL}?mode=getUnitList&project=${encodeURIComponent(project)}&t=${Date.now()}`;
-    const data = await jsonp(url);
-    if(!Array.isArray(data)){
-      document.getElementById("otherSection").style.display = "none";
-      return;
+    async function getDetail_(){
+      try{
+        return await jsonp_({ mode:"getUnitDetail", hpId: HP_ID, project: PROJECT, token: TOKEN });
+      }catch(_){
+        const url = new URL(API_URL);
+        url.searchParams.set("mode","getUnitDetail");
+        url.searchParams.set("hpId", HP_ID);
+        url.searchParams.set("project", PROJECT);
+        if(TOKEN) url.searchParams.set("token", TOKEN);
+        const res = await fetch(url.toString(), { cache:"no-store" });
+        return await res.json();
+      }
     }
-    const filtered = data
-      .filter(u => getUnitId(u) && getUnitId(u) !== String(hpId).trim())
-      .slice(0, 10);
-    renderOtherUnits(filtered);
-  }catch(e){
-    document.getElementById("otherSection").style.display = "none";
-  }
-}
 
-/** =========================
-* LOAD DETAIL (ใช้ JSONP + ไม่มี token เหมือน index)
-* ========================= */
-(async function init(){
-  hideError();
-  showLoader();
+    function showEl(id, on){ $(id).classList.toggle("hidden", !on); }
 
-  if(!hpId){
-    showError("ลิงก์ไม่ถูกต้อง: ไม่มี id เช่น details.html?id=HP-Z001");
-    hideLoader();
-    return;
-  }
+    function setBadge(el, label, value){
+      el.textContent = `${label}: ${value || "-"}`;
+    }
 
-  // ✅ ส่งได้ทั้ง id และ hpId เพื่อให้เข้ากับฝั่ง Apps Script ที่อาจใช้ชื่อพารามิเตอร์ต่างกัน
-  const url =
-    `${SCRIPT_URL}?mode=getUnitDetail` +
-    `&project=${encodeURIComponent(project)}` +
-    `&id=${encodeURIComponent(hpId)}` +
-    `&hpId=${encodeURIComponent(hpId)}` +
-    `&t=${Date.now()}`;
+    function setLink(elId, url){
+      const el = $(elId);
+      const u = String(url||"").trim();
+      if(!u){ el.classList.add("hidden"); el.removeAttribute("href"); return; }
+      el.classList.remove("hidden");
+      el.href = u;
+    }
 
-  let detail;
-  try{
-    detail = await jsonp(url);
-  }catch(err){
-    showError("โหลดข้อมูลไม่สำเร็จ (ตรวจ Deploy Apps Script ให้เป็น Web App และใช้ /exec)");
-    hideLoader();
-    return;
-  }
+    // Map embed helper: ถ้าเป็น maps.app.goo.gl จะ embed ไม่ได้เสมอไป
+    // เราจะพยายามใช้ embed แบบ query ถ้าเป็น URL ปกติ ให้ใส่ตรง iframe
+    function trySetMapEmbed(mapUrl){
+      const raw = String(mapUrl||"").trim();
+      if(!raw){ showEl("mapFrameWrap", false); return; }
 
-  if(detail && detail.error){
-    showError("โหลดข้อมูลไม่สำเร็จ: " + String(detail.error));
-    hideLoader();
-    return;
-  }
+      // หากเป็น google.com/maps หรือ www.google.com/maps -> ใช้ embed?pb ไม่ได้
+      // ใช้วิธีง่าย: embed แบบ q=
+      let embed = "";
+      try{
+        const u = new URL(raw);
+        const host = u.hostname.toLowerCase();
+        if(host.includes("google.") && u.pathname.includes("/maps")){
+          embed = "https://www.google.com/maps?q=" + encodeURIComponent(raw) + "&output=embed";
+        } else if(host.includes("maps.app.goo.gl")){
+          // short link embed ยาก -> ใช้ q= link แทน
+          embed = "https://www.google.com/maps?q=" + encodeURIComponent(raw) + "&output=embed";
+        } else {
+          embed = "https://www.google.com/maps?q=" + encodeURIComponent(raw) + "&output=embed";
+        }
+      }catch(_){
+        embed = "https://www.google.com/maps?q=" + encodeURIComponent(raw) + "&output=embed";
+      }
 
-  CURRENT_DETAIL = detail || {};
+      $("mapFrame").src = embed;
+      showEl("mapFrameWrap", true);
+    }
 
-  // ✅ รองรับ key หลายแบบ (เผื่อ detail ส่งกลับคนละชื่อ)
-  const plotText = String(pick(CURRENT_DETAIL, ["Plot","plot","Plot_No","plotNo","unitPlot"]) || "-").trim() || "-";
-  const priceVal = pick(CURRENT_DETAIL, ["Price","price","Selling_Price","Sell_Price"]) || 0;
-  const stText = String(pick(CURRENT_DETAIL, ["Status","status"]) || "—").trim() || "—";
+    function renderGallery(thumb, listStr){
+      const coverBox = $("coverBox");
+      const thumbs = $("thumbs");
+      thumbs.innerHTML = "";
 
-  document.getElementById("pageTitle").textContent = `Detail Plot: ${plotText}`;
-  document.getElementById("tagPlot").textContent = plotText;
-  document.getElementById("priceText").textContent = moneyTHB(priceVal);
+      const urls = [];
+      const t = String(thumb||"").trim();
+      if(t) urls.push(t);
 
-  const stEl = document.getElementById("statusBelow");
-  stEl.textContent = stText;
-  const st = statusStyle(stText);
-  stEl.style.borderColor = st.border;
-  stEl.style.color = st.text;
+      if(listStr){
+        String(listStr).split(",").map(s=>s.trim()).filter(Boolean).forEach(u=>{
+          if(!urls.includes(u)) urls.push(u);
+        });
+      }
 
-  renderMiniMeta(CURRENT_DETAIL);
-  renderDescription(CURRENT_DETAIL);
+      // cover
+      if(urls.length){
+        coverBox.innerHTML = `<img src="${esc(urls[0])}" class="w-full h-full object-cover" referrerpolicy="no-referrer">`;
+      } else {
+        coverBox.innerHTML = `<div class="w-full h-full grid place-items-center text-5xl">🖼️</div>`;
+      }
 
-  setMapSection(pickMapLink(CURRENT_DETAIL));
+      // thumbs
+      urls.slice(0, 12).forEach(u=>{
+        const a = document.createElement("button");
+        a.className = "aspect-square rounded-2xl overflow-hidden border border-slate-200 bg-slate-100";
+        a.innerHTML = `<img src="${esc(u)}" class="w-full h-full object-cover" referrerpolicy="no-referrer">`;
+        a.addEventListener("click", ()=>{
+          coverBox.innerHTML = `<img src="${esc(u)}" class="w-full h-full object-cover" referrerpolicy="no-referrer">`;
+          window.scrollTo({ top:0, behavior:"smooth" });
+        });
+        thumbs.appendChild(a);
+      });
+    }
 
-  const thumb = cleanDriveImage(pick(CURRENT_DETAIL, ["Thumbnail_Image","thumbnail","thumb","Thumbnail","thumbUrl"]) || "");
-  const listRaw = String(pick(CURRENT_DETAIL, ["Image_List","image_list","Gallery","gallery","images"]) || "");
-  const list = listRaw
-    .split(",")
-    .map(s=>cleanDriveImage(s.trim()))
-    .filter(Boolean);
+    async function init(){
+      $("btnBack").href = `index.html?project=${encodeURIComponent(PROJECT)}`;
+      $("btnGoGateway").href = `gateway.html?project=${encodeURIComponent(PROJECT)}`;
+      $("hpTitle").textContent = HP_ID || "HP-XXXX";
 
-  images = (thumb ? [thumb, ...list.filter(x=>x!==thumb)] : list);
+      if(!HP_ID){
+        showEl("notAvailable", true);
+        $("notAvailable").querySelector(".text-2xl").textContent = "Missing id";
+        return;
+      }
 
-  if(!images.length){
-    images = ["data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><rect width='100%' height='100%' fill='#e6edf6'/><text x='50%' y='50%' text-anchor='middle' fill='#8aa0bb' font-size='40' font-family='Arial'>no image</text></svg>`)];
-  }
+      try{
+        const data = await getDetail_();
+        if(data && data.error) throw new Error(data.error);
 
-  const mainImg = document.getElementById("mainImg");
-  mainImg.onload = () => { hideLoader(); };
-  mainImg.onerror = () => { hideLoader(); };
-  mainImg.src = images[0];
-  mainImg.classList.remove("skeleton");
+        const sys = normSys(data.System_Status || data.system_status || data.sysStatus || "");
+        const status = String(data.Status || data.status || "").trim();
 
-  renderThumbs();
-  setMain(0);
-  enableSwipe();
+        setBadge($("badgeSys"), "System", sys || "-");
+        setBadge($("badgeStatus"), "Status", status || "-");
 
-  document.getElementById("btnPrev").addEventListener("click", ()=> setMain(idx-1));
-  document.getElementById("btnNext").addEventListener("click", ()=> setMain(idx+1));
+        // rule: public view only Live
+        const live = isLive(sys);
+        const allowPreview = live || (!!TOKEN); // ถ้ามี token ให้ดูได้ (admin preview)
+        if(!allowPreview){
+          showEl("notAvailable", true);
+          showEl("content", false);
+          return;
+        }
 
-  renderInfo(CURRENT_DETAIL);
-  loadOtherUnits();
+        // show content
+        showEl("notAvailable", false);
+        showEl("content", true);
 
-  setDockLink("dockSales", pick(CURRENT_DETAIL, ["Sales_Gallery","salesPdf","SalesPDF","Sales_PDF"]));
-  setDockLink("dockMaterial", pick(CURRENT_DETAIL, ["Material_PDF","materialPdf","MaterialPDF"]));
-  setDockLink("dockFloorplan", pick(CURRENT_DETAIL, ["FloorPlan_PDF","floorplan","Floorplan_PDF","Floor_Plan"]));
+        // edit button for admin
+        if(TOKEN){
+          const editHref = `edit.html?id=${encodeURIComponent(HP_ID)}&project=${encodeURIComponent(PROJECT)}&token=${encodeURIComponent(TOKEN)}`;
+          $("btnEdit").href = editHref;
+          $("btnEdit").classList.remove("hidden");
+        }
 
-  setFbVisitBar(pickFbLink(CURRENT_DETAIL));
-})();
-</script>
+        // fill
+        $("vPrice").textContent = fmtPrice(data.Price || data.price || "");
+        $("vBed").textContent = (data.Bedrooms ?? data.bedrooms ?? "-");
+        $("vBath").textContent = (data.Bathrooms ?? data.bathrooms ?? "-");
+        $("vLiving").textContent = (data.Living_Area_sq_m ?? data.livingSqm ?? data.living_area_sq_m ?? "-");
+
+        $("vPlot").textContent = (data.Plot ?? data.plot ?? "-");
+        $("vType").textContent = (data.Type ?? data.type ?? "-");
+        $("vProjectName").textContent = String(data.Project_Name ?? data.projectName ?? data.project_name ?? "").trim();
+        $("vAddress").textContent = String(data.Address ?? data.address ?? "").trim();
+
+        $("vLandW").textContent = (data.Land_Area_sq_w ?? data["Land Area (sq.w)"] ?? "-");
+        $("vLandM").textContent = (data.Land_Area_sq_m ?? data["Land Area (sq.m)"] ?? "-");
+        $("vPoolSize").textContent = (data.Pool_Size ?? data["Pool Size"] ?? "-");
+        $("vPoolDepth").textContent = (data.Pool_Depth ?? data["Pool Depth"] ?? "-");
+        $("vFurn").textContent = String(data.Furnishing ?? "").trim() || "-";
+        $("vZone").textContent = String(data.Zone ?? "").trim() || "-";
+        $("vDesc").textContent = String(data.Description ?? data.description ?? "").trim() || "-";
+
+        // links
+        setLink("lnkFB",  data.FB_Link || data.fb || "");
+        setLink("lnkVT",  data.Virtual_Tour || data.virtual_tour || "");
+        setLink("lnkMap", data.Map_Link || data.map || "");
+
+        setLink("pdfSales", data.Sales_Gallery || data.sales_gallery || "");
+        setLink("pdfMat",   data.Material_PDF || data.material_pdf || "");
+        setLink("pdfFloor", data.FloorPlan_PDF || data.floorplan_pdf || "");
+
+        // embed map (optional)
+        trySetMapEmbed(data.Map_Link || "");
+
+        // gallery
+        renderGallery(data.Thumbnail_Image || data.thumbnail || "", data.Image_List || data.image_list || "");
+      }catch(e){
+        console.error(e);
+        showEl("notAvailable", true);
+        $("notAvailable").querySelector(".text-2xl").textContent = "โหลดข้อมูลไม่สำเร็จ";
+        $("notAvailable").querySelector(".text-slate-500").textContent = e.message || "error";
+      }
+    }
+
+    init();
+  </script>
 </body>
 </html>
