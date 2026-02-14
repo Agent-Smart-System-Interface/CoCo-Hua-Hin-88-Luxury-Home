@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype html> 
 <html lang="th">
 <head>
 <meta charset="utf-8" />
@@ -390,16 +390,16 @@ gap:6px;
 }
 .otherTopRow{
 display:flex;
-align-items:center;
+align-items:center;          
 justify-content:space-between;
-gap:6px;
-flex-wrap:nowrap;
+gap:6px;                    
+flex-wrap:nowrap;           
 }
 .otherPlot{
 font-weight:1100;
 font-size:13px;
 color: rgba(15,23,42,.95);
-white-space:nowrap;
+white-space:nowrap;         
 overflow:hidden;
 text-overflow:ellipsis;
 flex:1 1 auto;
@@ -409,20 +409,20 @@ min-width:0;
 display:inline-flex;
 align-items:center;
 justify-content:center;
-padding:4px 7px;
+padding:4px 7px;            
 border-radius: 999px;
 font-weight:1000;
-font-size:10.5px;
+font-size:10.5px;           
 line-height:1;
 background: rgba(255,255,255,.92);
 border: 2px solid rgba(15,23,42,.15);
 color: rgba(15,23,42,.88);
-white-space:nowrap;
+white-space:nowrap;         
 flex:0 0 auto;
 }
 .otherMeta{
-font-weight:400;
-font-size:10.5px;
+font-weight:400;            
+font-size:10.5px;           
 letter-spacing:.1px;
 color: rgba(15,23,42,.55);
 white-space:normal;
@@ -472,17 +472,24 @@ align-items:center;
 padding:8px 0 10px;
 opacity:.85;
 }
+
+/* ✅ FIX สำคัญ: แถบแชร์เลื่อนซ้าย-ขวา + จับกลาง (center snap) */
 .shareRow{
 display:flex;
 gap:14px;
-justify-content:center;
+justify-content:flex-start; /* ไม่ใช้ center เพราะต้องเลื่อน */
 overflow:auto;
 padding:10px 8px 6px;
 scroll-snap-type: x mandatory;
 -webkit-overflow-scrolling: touch;
 scrollbar-width: none;
+
+/* ทำให้ไอคอนตัวแรก/ตัวสุดท้าย “อยู่กลางจอ” ได้ */
+padding-left: calc(50% - 29px);
+padding-right: calc(50% - 29px);
 }
 .shareRow::-webkit-scrollbar{ display:none; }
+
 .shareBtn{
 flex:0 0 auto;
 width:58px;
@@ -502,7 +509,7 @@ box-shadow: 0 10px 22px rgba(0,0,0,.10);
 display:grid;
 place-items:center;
 margin:0 auto;
-font-size:20px;
+font-size:22px; /* ให้ emoji/ไอคอนชัด */
 }
 .shareLbl{
 margin-top:6px;
@@ -513,6 +520,7 @@ white-space:nowrap;
 }
 .shareBtn:active .shareCircle{ transform: scale(.97); }
 #shareCanvas{ display:none; }
+
 .fbVisitWrap{
 margin-top: 10px;
 display:flex;
@@ -549,15 +557,16 @@ flex:0 0 auto;
 background: rgba(29,78,216,.10);
 }
 .fbVisitBtn.hidden{ display:none; }
+
 .quickLinks{
 margin-top: 10px;
 display:flex;
-flex-direction:column;
+flex-direction:column;       
 align-items:center;
 gap:10px;
 }
 .quickBtn{
-width:min(640px, 100%);
+width:min(640px, 100%);      
 display:flex;
 align-items:center;
 justify-content:center;
@@ -613,7 +622,6 @@ border-top: 1px solid rgba(255,255,255,.55);
 .dockInner{
 max-width:1100px;
 margin:0 auto;
-/* ✅ FIX: เดิม 3 ช่อง → เพิ่มเป็น 5 ช่อง */
 display:grid;
 grid-template-columns: repeat(5, minmax(0, 1fr));
 gap:10px;
@@ -788,7 +796,6 @@ pointer-events:none;
   </div>
 </div>
 
-<!-- ✅ FIX: เพิ่ม 2 ปุ่ม Agent/Customer PDF -->
 <div class="bottomDock" id="bottomDock" aria-label="Downloads">
   <div class="dockInner">
     <a class="dockBtn disabled" id="dockSales" href="#" target="_blank" rel="noopener">
@@ -819,24 +826,19 @@ pointer-events:none;
 /** =========================
 * CONFIG
 * ========================= */
-// ✅ ใช้ Apps Script URL ใหม่ของคุณ
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxlsoGQV_IF_UOcQTpAiUajl9bIK8h4B1irTklEvmpiTPhiDPi7vnU-E3xm9pr3acN/exec";
 
 const qs = new URLSearchParams(location.search);
 const hpId = qs.get("id") || qs.get("hpId") || "";
 const project = qs.get("project") || "HP00";
 
-/** ✅ TOKEN handling (คงไว้ตามของเดิม) */
+/** ✅ TOKEN handling */
 const TOKEN_QS = (qs.get("token") || "").trim();
 const TOKEN_LS = (localStorage.getItem("HP_AUTH_TOKEN") || "").trim();
 let token = TOKEN_QS || TOKEN_LS;
 
-/** ✅ ถ้ามี token ใน URL ให้เก็บลง localStorage เพื่อหน้าอื่นใช้ */
-if (TOKEN_QS) {
-  try{ localStorage.setItem("HP_AUTH_TOKEN", TOKEN_QS); }catch(e){}
-}
+if (TOKEN_QS) localStorage.setItem("HP_AUTH_TOKEN", TOKEN_QS);
 
-/** ✅ helper ไปหน้า gateway เพื่อ login (คงไว้ เผื่อ Admin) */
 function goGateway(reason){
   try{
     if (reason) console.warn("[AUTH]", reason);
@@ -846,13 +848,10 @@ function goGateway(reason){
     location.href = `gateway.html?project=${encodeURIComponent(project)}`;
   }
 }
-
 function clearToken(){
   try{ localStorage.removeItem("HP_AUTH_TOKEN"); }catch(e){}
   token = "";
 }
-
-/** ✅ ให้ไอคอน Home ลิงก์กลับ index พร้อม project + token (ถ้ามี) */
 (function setHomeLink(){
   const a = document.getElementById("homeLink");
   if(!a) return;
@@ -860,17 +859,9 @@ function clearToken(){
   a.href = `index.html?project=${encodeURIComponent(project)}${t}`;
 })();
 
-/** Loader helpers */
-function showLoader(){
-  const el = document.getElementById("pageLoader");
-  if(el) el.style.display = "flex";
-}
-function hideLoader(){
-  const el = document.getElementById("pageLoader");
-  if(el) el.style.display = "none";
-}
+function showLoader(){ const el = document.getElementById("pageLoader"); if(el) el.style.display = "flex"; }
+function hideLoader(){ const el = document.getElementById("pageLoader"); if(el) el.style.display = "none"; }
 
-/** JSONP */
 function jsonp(url, timeoutMs = 20000){
   return new Promise((resolve, reject) => {
     const cb = "cb_" + Math.random().toString(36).slice(2);
@@ -885,6 +876,7 @@ function jsonp(url, timeoutMs = 20000){
 
     const sep = url.includes("?") ? "&" : "?";
     script.src = url + sep + "callback=" + encodeURIComponent(cb) + "&t=" + Date.now();
+
     script.onerror = () => { cleanup(); reject(new Error("jsonp_error")); };
     document.body.appendChild(script);
   });
@@ -892,10 +884,8 @@ function jsonp(url, timeoutMs = 20000){
 
 function showError(msg, showLoginBtn = false){
   const box = document.getElementById("errBox");
-  if(!box) return;
   box.style.display = "block";
   box.innerHTML = "";
-
   const p = document.createElement("div");
   p.textContent = msg;
   box.appendChild(p);
@@ -915,10 +905,8 @@ function showError(msg, showLoginBtn = false){
     box.appendChild(btn);
   }
 }
-
 function hideError(){
   const box = document.getElementById("errBox");
-  if(!box) return;
   box.style.display = "none";
   box.textContent = "";
 }
@@ -967,7 +955,6 @@ let idx = 0;
 let CURRENT_DETAIL = null;
 
 function setMain(i){
-  if(!images.length) return;
   idx = Math.max(0, Math.min(i, images.length-1));
   const mainImg = document.getElementById("mainImg");
   mainImg.classList.remove("skeleton");
@@ -975,7 +962,6 @@ function setMain(i){
   document.getElementById("tagCount").textContent = `${idx+1} / ${images.length || 0}`;
   document.querySelectorAll(".thumb").forEach((t, k)=> t.classList.toggle("active", k===idx));
 }
-
 function renderThumbs(){
   const strip = document.getElementById("thumbStrip");
   strip.innerHTML = "";
@@ -989,7 +975,6 @@ function renderThumbs(){
     strip.appendChild(im);
   });
 }
-
 function enableSwipe(){
   const gallery = document.getElementById("gallery");
   let startX = 0, dx = 0;
@@ -1017,12 +1002,18 @@ function pick(obj, keys){
   }
   return "";
 }
-function fmtSqm(v){
-  const s = safeText(v);
-  if(s === "-") return "-";
-  const low = s.toLowerCase();
-  if (low.includes("sq") || low.includes("ตร.ม") || low.includes("m2") || low.includes("m²")) return s;
-  return s + " sq.m";
+
+/* ✅ FIX: ดึงตัวเลข sq.m ให้ “เลขล้วน” เสมอ */
+function extractNumber(v){
+  const s = String(v ?? "").replace(/,/g,"").trim();
+  if(!s) return "";
+  const m = s.match(/(\d+(?:\.\d+)?)/);
+  return m ? m[1] : "";
+}
+function fmtSqmNumber(v){
+  const n = extractNumber(v);
+  if(!n) return "-";
+  return `${n} sq.m`;
 }
 
 const LAND_SQM_KEYS = ["Land_Area_sq_m","Land_Area_SQM","Land Area (sq.m)","Land Area (sqm)","Land Area sqm","Land Area sq.m"];
@@ -1044,9 +1035,10 @@ function renderDescription(detail){
   el.classList.remove("descEmpty");
 }
 
+/* ✅ FIX: miniMeta = Land 숫자 sq.m + Living 숫ะ sq.m */
 function renderMiniMeta(detail){
-  const landM = fmtSqm(pick(detail, LAND_SQM_KEYS));
-  const livingM = fmtSqm(pick(detail, LIVING_SQM_KEYS));
+  const landM = fmtSqmNumber(pick(detail, LAND_SQM_KEYS));
+  const livingM = fmtSqmNumber(pick(detail, LIVING_SQM_KEYS));
   const el = document.getElementById("miniMeta");
   if(!el) return;
   el.textContent = `Land ${landM} · Living ${livingM}`;
@@ -1065,8 +1057,8 @@ function renderInfo(detail){
     ["Land Area (sq.w)", safeText(pick(detail, LAND_SQW_KEYS))],
     ["Land Area (sq.m)", safeText(pick(detail, LAND_SQM_KEYS))],
     ["Living Area (sq.m)", safeText(pick(detail, LIVING_SQM_KEYS))],
-    ["Pool Size", safeText(pick(detail, ["Pool_Size","PoolSize","Pool Size"]))],
-    ["Pool Depth", safeText(pick(detail, ["Pool_Depth","PoolDepth","Pool Depth"]))],
+    ["Pool Size", safeText(pick(detail, ["Pool_Size","PoolSize"]))],
+    ["Pool Depth", safeText(pick(detail, ["Pool_Depth","PoolDepth"]))],
     ["Furnishing", safeText(pick(detail, ["Furnishing","furnishing"]))],
     ["Price_SQM", safeText(pick(detail, ["Price_SQM","PriceSQM"]))],
     ["Status", safeText(pick(detail, ["Status","status"]))],
@@ -1100,7 +1092,7 @@ function setDockLink(elId, link){
   el.setAttribute("href", href);
 }
 
-/** ====== PDF: generate then open ====== */
+/** PDF: generate then open */
 async function ensurePdfAndOpen(type){
   try{
     hideError();
@@ -1139,7 +1131,7 @@ async function ensurePdfAndOpen(type){
   }
 }
 
-/** ====== AD: FB_Link ====== */
+/** FB_Link */
 function pickFbLink(detail){
   const keys = ["FB_Link","FBLink","FB_LINK","facebook","Facebook","FB"];
   for(const k of keys){
@@ -1167,7 +1159,7 @@ function setFbVisitBar(link){
   if (wrap) wrap.style.display = "flex";
 }
 
-/** ====== AE: Map_Link ====== */
+/** Map_Link */
 function pickMapLink(detail){
   const keys = ["Map_Link","MapLink","GoogleMap","Google_Maps","Map","Location","Location_Link"];
   for(const k of keys){
@@ -1180,12 +1172,12 @@ function pickMapLink(detail){
 function buildOpenMapUrl(link){
   const raw = String(link || "").trim();
   if(!raw) return "";
-  // ✅ รองรับทั้ง google.com/maps และ maps.app.goo.gl และลิงก์ http ทั่วไป
+  if (raw.includes("google.com/maps")) return raw;
   if (raw.startsWith("http")) return raw;
   return `https://www.google.com/maps?q=${encodeURIComponent(raw)}`;
 }
 
-/** ====== AF: Virtual_Tour ====== */
+/** Virtual_Tour */
 function pickVirtualTour(detail){
   const keys = ["Virtual_Tour","VirtualTour","Virtual_TOUR","VirtualTour_Link","Virtual","Tour","VR_Link","Virtual_Link"];
   for(const k of keys){
@@ -1218,23 +1210,21 @@ function setQuickLinks(mapLink, tourLink){
     tourBtn.href = "#";
   }
 
-  if (wrap) {
-    wrap.style.display = (mapHref || tourHref) ? "flex" : "none";
-  }
+  if (wrap) wrap.style.display = (mapHref || tourHref) ? "flex" : "none";
 }
 
 /** =========================
-* SHARE (คืนกลับมาให้ “ครบ” แบบไม่เปลี่ยน UI)
+* SHARE ✅ FIX: 8 icons + เลื่อน + จับกลาง
 * ========================= */
 function getPublicShareUrl(){
   const u = new URL(location.href);
-  u.searchParams.delete("token"); // ✅ ห้ามแชร์ token
+  u.searchParams.delete("token");
   if (hpId) u.searchParams.set("id", hpId);
   if (project) u.searchParams.set("project", project);
   return u.toString();
 }
 function openPopup(url){
-  const w = 720, h = 720;
+  const w = 640, h = 640;
   const left = (screen.width - w) / 2;
   const top = (screen.height - h) / 2;
   window.open(url, "_blank", `noopener,noreferrer,width=${w},height=${h},left=${left},top=${top}`);
@@ -1246,34 +1236,43 @@ async function copyToClipboard(text){
     ta.value = text; ta.style.position="fixed"; ta.style.left="-9999px";
     document.body.appendChild(ta); ta.select();
     try{ document.execCommand("copy"); }catch(err){}
-    document.body.removeChild(ta);
-    return true;
+    document.body.removeChild(ta); return true;
   }
 }
-function buildShareText(detail){
-  const plot = String(detail?.Plot || hpId || "Property").trim() || "Property";
-  const price = moneyTHB(detail?.Price || 0);
-  return `Plot ${plot} · ${price}`;
+async function nativeShareOrCopy(title, text, url){
+  try{
+    if (navigator.share){
+      await navigator.share({ title, text, url });
+      return;
+    }
+  }catch(e){}
+  await copyToClipboard(url);
 }
+
 function renderShareIcons(detail){
   const row = document.getElementById("shareRow");
   if(!row) return;
 
   const url = getPublicShareUrl();
-  const title = buildShareText(detail);
+  const plot = String(detail?.Plot || hpId || "Property").trim() || "Property";
+  const price = moneyTHB(detail?.Price || 0);
+  const title = `Plot ${plot} · ${price}`;
   const text = `Check this property: ${title}`;
 
   const items = [
-    {label:"Facebook", icon:"f", onClick: ()=> openPopup(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`)},
-    {label:"LINE", icon:"L", onClick: ()=> openPopup(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}`)},
-    {label:"WhatsApp", icon:"W", onClick: ()=> openPopup(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`)},
-    {label:"Telegram", icon:"T", onClick: ()=> openPopup(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`)},
-    {label:"Copy", icon:"🔗", onClick: async()=> { await copyToClipboard(url); }},
+    {label:"Facebook", icon:"f", emoji:"📘", onClick: ()=> openPopup(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`)},
+    {label:"Messenger", icon:"m", emoji:"💬", onClick: ()=> openPopup(`fb-messenger://share?link=${encodeURIComponent(url)}`)},
+    {label:"WhatsApp", icon:"w", emoji:"🟢", onClick: ()=> openPopup(`https://wa.me/?text=${encodeURIComponent(text + "\n" + url)}`)},
+    {label:"Telegram", icon:"t", emoji:"✈️", onClick: ()=> openPopup(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`)},
+    {label:"LINE", icon:"l", emoji:"🟩", onClick: ()=> openPopup(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}`)},
+    {label:"Email", icon:"e", emoji:"✉️", onClick: ()=> openPopup(`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(text + "\n\n" + url)}`)},
+    {label:"Copy", icon:"c", emoji:"🔗", onClick: async()=> { await copyToClipboard(url); }},
+    {label:"Share", icon:"s", emoji:"📤", onClick: async()=> { await nativeShareOrCopy(title, text, url); }},
   ];
 
   row.innerHTML = items.map((it, i)=>`
-    <button class="shareBtn" type="button" data-i="${i}">
-      <div class="shareCircle">${it.icon}</div>
+    <button class="shareBtn" type="button" data-i="${i}" aria-label="${it.label}">
+      <div class="shareCircle">${it.emoji}</div>
       <div class="shareLbl">${it.label}</div>
     </button>
   `).join("");
@@ -1285,10 +1284,15 @@ function renderShareIcons(detail){
       if(it && it.onClick) it.onClick();
     });
   });
+
+  /* ✅ ให้เริ่มต้น “อยู่กลาง” แบบสมูทบนมือถือ */
+  try{
+    row.scrollTo({ left: 0, behavior: "smooth" });
+  }catch(e){}
 }
 
 /** =========================
-* Other Plots (คงหลักการเดิม + กรอง offline/pending)
+* Other Plots ✅ FIX: Land/Living เป็นตัวเลข + sq.m
 * ========================= */
 function getUnitId(u){ return String(u?.HP_ID || u?.id || u?.hpId || u?.Unit_ID || "").trim(); }
 function getPlot(u){ return String(u?.Plot || u?.plot || u?.Unit_Plot || u?.Plot_No || "").trim(); }
@@ -1305,11 +1309,11 @@ function isHiddenBySystemStatus(u){
   return ss.includes("offline") || ss.includes("pending");
 }
 function getLandLivingLines(u){
-  const land = safeText(pick(u, LAND_SQM_KEYS));
-  const living = safeText(pick(u, LIVING_SQM_KEYS));
+  const land = fmtSqmNumber(pick(u, LAND_SQM_KEYS));
+  const living = fmtSqmNumber(pick(u, LIVING_SQM_KEYS));
   return {
-    landLine: land === "-" ? "Land -" : `Land ${land} sq.m`,
-    livingLine: living === "-" ? "Living -" : `Living ${living} sq.m`
+    landLine: land === "-" ? "Land -" : `Land ${land}`,
+    livingLine: living === "-" ? "Living -" : `Living ${living}`
   };
 }
 function renderOtherUnits(units){
@@ -1429,14 +1433,16 @@ async function loadOtherUnits(){
 
   renderMiniMeta(detail);
   renderDescription(detail);
-  renderInfo(detail);
 
-  // Share + FB + Quick links
+  /* ✅ FIX: share กลับมา 8 ไอคอน */
   renderShareIcons(detail);
-  setFbVisitBar(pickFbLink(detail));
-  setQuickLinks(pickMapLink(detail), pickVirtualTour(detail));
 
-  // Images
+  setFbVisitBar(pickFbLink(detail));
+
+  const mapLink = pickMapLink(detail);
+  const tourLink = pickVirtualTour(detail);
+  setQuickLinks(mapLink, tourLink);
+
   const thumb = cleanDriveImage(detail.Thumbnail_Image || "");
   const list = String(detail.Image_List || "")
     .split(",").map(s=>cleanDriveImage(s.trim()))
@@ -1444,7 +1450,7 @@ async function loadOtherUnits(){
 
   images = (thumb ? [thumb, ...list.filter(x=>x!==thumb)] : list);
   if(!images.length){
-    images = ["data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><rect width='100%' height='100%' fill='#e6edf6'/><text x='50%' y='50%' text-anchor='middle' fill='#8aa0bb' font-size='40' font-family='Arial'>no image</text></svg>`)];
+    images = ["data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><rect width='100%' height='100%' fill='#e6edf6'/><text x='50%' y='50%' text-anchor='middle' fill='#8aa0bb' font-size='40' font-family='Arial'>no image</text></svg>`) ];
   }
 
   const mainImg = document.getElementById("mainImg");
@@ -1460,15 +1466,13 @@ async function loadOtherUnits(){
   document.getElementById("btnPrev").addEventListener("click", ()=> setMain(idx-1));
   document.getElementById("btnNext").addEventListener("click", ()=> setMain(idx+1));
 
-  // Other plots
+  renderInfo(detail);
   loadOtherUnits();
 
-  // Dock (3 ปุ่มเดิม)
   setDockLink("dockSales", detail.Sales_Gallery);
   setDockLink("dockMaterial", detail.Material_PDF);
   setDockLink("dockFloorplan", detail.FloorPlan_PDF);
 
-  // Dock Customer/Agent (มีลิงก์เปิดเลย / ไม่มีลิงก์ให้ generate)
   const customerBtn = document.getElementById("dockCustomerPDF");
   const agentBtn = document.getElementById("dockAgentPDF");
 
@@ -1494,7 +1498,7 @@ async function loadOtherUnits(){
     agentBtn.classList.remove("disabled");
     agentBtn.addEventListener("click", (ev)=>{
       ev.preventDefault();
-      ensurePdfAndOpen("agent"); // ฝั่ง GS ควรบังคับ token
+      ensurePdfAndOpen("agent");
     });
   }
 
