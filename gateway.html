@@ -1,143 +1,395 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DIRECT HUB - ADMIN GATEWAY</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;600&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>DIRECT ADMIN · gateway</title>
+  <style>
+    :root{
+      --bg1:#071022;
+      --bg2:#0b1a33;
+      --card:#ffffff;
+      --text:#0b1320;
+      --muted:#6b7a90;
+      --shadow:0 22px 70px rgba(0,0,0,.35);
+      --radius:28px;
+      --line:rgba(15,23,42,.08);
+      --btn:#0b1320;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans Thai", sans-serif;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      background:
+        radial-gradient(1200px 700px at 50% 10%, rgba(255,255,255,.10), rgba(255,255,255,0) 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      color:#fff;
+      padding:18px 14px;
+    }
+    .panel{
+      width:min(520px, 94vw);
+      background:rgba(255,255,255,.96);
+      border:1px solid rgba(255,255,255,.45);
+      border-radius: 46px;
+      box-shadow: var(--shadow);
+      padding:28px 22px 18px;
+      position:relative;
+      overflow:hidden;
+    }
+    .iconTop{
+      width:74px;height:74px;border-radius:999px;
+      background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.65));
+      border:1px solid rgba(15,23,42,.08);
+      box-shadow: 0 18px 40px rgba(0,0,0,.10);
+      display:grid;place-items:center;
+      margin: 4px auto 16px;
+      color:#0b1320;
+      font-size:30px;
+    }
+    .title{
+      text-align:center;
+      font-weight:1100;
+      letter-spacing:.6px;
+      font-size:30px;
+      margin:0;
+      color:#111827;
+    }
+    .sub{
+      text-align:center;
+      margin:8px 0 18px;
+      color: rgba(17,24,39,.55);
+      font-weight:800;
+      font-size:12px;
+      letter-spacing:.35em;
+      text-transform:uppercase;
+      line-height:1.45;
+    }
+    .box{
+      background: rgba(15,23,42,.04);
+      border:1px solid rgba(15,23,42,.06);
+      border-radius: 22px;
+      padding:14px 14px 12px;
+      width:min(420px, 92%);
+      margin:0 auto;
+    }
+    label{
+      display:block;
+      font-weight:1000;
+      color: rgba(15,23,42,.55);
+      letter-spacing:.18em;
+      font-size:11px;
+      text-transform:uppercase;
+      margin:8px 2px 8px;
+      text-align:center;
+    }
+    input{
+      width:100%;
+      padding:14px 14px;
+      border-radius: 16px;
+      border:1px solid rgba(15,23,42,.12);
+      outline:none;
+      background: rgba(255,255,255,.9);
+      font-size:16px;
+      font-weight:900;
+      text-align:center;
+      color:#111827;
+    }
+    input:focus{ border-color: rgba(59,130,246,.55); box-shadow: 0 0 0 4px rgba(59,130,246,.15); }
+    .err{
+      margin-top:10px;
+      text-align:center;
+      font-weight:1000;
+      color:#e11d48;
+      font-size:12px;
+      display:none;
+    }
+    .btn{
+      width:min(420px, 92%);
+      margin:16px auto 8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:16px 16px;
+      border-radius: 999px;
+      border:0;
+      cursor:pointer;
+      background: linear-gradient(180deg, rgba(11,19,32,1), rgba(11,19,32,.92));
+      color:#fff;
+      font-weight:1100;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      box-shadow: 0 18px 40px rgba(0,0,0,.18);
+      user-select:none;
+    }
+    .btn:active{ transform: scale(.99); }
+    .hint{
+      text-align:center;
+      color: rgba(17,24,39,.40);
+      font-weight:900;
+      font-size:11px;
+      letter-spacing:.22em;
+      margin:10px 0 0;
+      text-transform:uppercase;
+    }
+    .mini{
+      margin-top:8px;
+      text-align:center;
+      color: rgba(17,24,39,.55);
+      font-weight:900;
+      font-size:12px;
+    }
+    .rowMini{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .chip{
+      padding:8px 10px;
+      border-radius: 999px;
+      background: rgba(15,23,42,.05);
+      border:1px solid rgba(15,23,42,.06);
+      color: rgba(15,23,42,.70);
+      font-weight:1000;
+      font-size:12px;
+      max-width: 92%;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .loading{
+      pointer-events:none;
+      opacity:.7;
+    }
+  </style>
 </head>
-
-<body class="bg-slate-900 min-h-screen flex items-center justify-center p-6 italic font-medium" style="font-family:Kanit,sans-serif;">
-  <div class="max-w-md w-full bg-white rounded-[4rem] p-10 sm:p-16 text-center shadow-2xl border-t-[14px] border-slate-900 relative overflow-hidden">
-    <div class="w-24 h-24 bg-slate-50 text-slate-900 rounded-[2.5rem] flex items-center justify-content-center mx-auto mb-10 text-3xl shadow-inner border border-slate-100 flex items-center justify-center">
-      🔒
+<body>
+  <div class="panel">
+    <div class="iconTop" aria-hidden="true">🔐</div>
+    <h1 class="title">DIRECT ADMIN</h1>
+    <div class="sub">
+      ระบบจัดการข้อมูลภายใน<br/>
+      AUTHORIZED PERSONNEL ONLY
     </div>
 
-    <h1 class="text-3xl font-bold text-slate-800 mb-4 tracking-tighter uppercase">Direct Admin</h1>
-    <p class="text-slate-400 text-[10px] mb-8 uppercase tracking-[0.3em] font-bold leading-relaxed">
-      ระบบจัดการข้อมูลฝากขายตรง<br>Authorized Personnel Only
-    </p>
+    <div class="box">
+      <label>PROJECT</label>
+      <input id="projectInput" type="text" inputmode="text" autocomplete="off" />
 
-    <div class="bg-slate-50 rounded-[2rem] p-5 mb-6 border border-slate-100">
-      <div class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Project</div>
-      <input id="projectInput" class="w-full text-center font-extrabold text-slate-900 bg-white border border-slate-200 rounded-2xl px-4 py-3 outline-none" value="Properties">
+      <label style="margin-top:12px;">PIN</label>
+      <input id="pinInput" type="password" inputmode="numeric" autocomplete="one-time-code" maxlength="12" placeholder="••••" />
 
-      <div class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mt-4 mb-2">PIN</div>
-      <input id="pinInput" type="password" inputmode="numeric" autocomplete="off"
-             class="w-full text-center font-extrabold text-slate-900 bg-white border border-slate-200 rounded-2xl px-4 py-3 outline-none tracking-[0.3em]"
-             placeholder="••••">
-
-      <div id="err" class="text-[11px] font-bold text-rose-500 mt-3 hidden">Invalid PIN</div>
+      <div class="err" id="errBox">-</div>
     </div>
 
-    <button id="loginBtn"
-      class="group block w-full py-6 bg-slate-900 text-white rounded-[2rem] font-bold uppercase text-[11px] tracking-widest
-             hover:bg-blue-600 transition-all shadow-2xl active:scale-95">
-      Login to Dashboard <span class="inline-block ml-2 group-hover:translate-x-2 transition-transform">➜</span>
+    <button class="btn" id="loginBtn" type="button">
+      <span>LOGIN TO DASHBOARD</span>
+      <span aria-hidden="true">→</span>
     </button>
 
-    <div class="text-[10px] text-slate-300 font-bold uppercase tracking-[0.25em] mt-8">
-      Session expires automatically
+    <div class="rowMini">
+      <div class="chip" id="chipProject">project: -</div>
+      <div class="chip" id="chipBack">back: -</div>
     </div>
+
+    <div class="hint">SESSION EXPIRES AUTOMATICALLY</div>
+    <div class="mini" id="miniNote"></div>
   </div>
 
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwxlsoGQV_IF_UOcQTpAiUajl9bIK8h4B1irTklEvmpiTPhiDPi7vnU-E3xm9pr3acN/exec";
+<script>
+/** =========================
+ * CONFIG (แก้ได้จุดเดียว)
+ * ========================= */
+// ✅ ใช้ Apps Script URL ใหม่ของคุณ (ตัวเดียวกับ details โค้ดใหม่)
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxlsoGQV_IF_UOcQTpAiUajl9bIK8h4B1irTklEvmpiTPhiDPi7vnU-E3xm9pr3acN/exec";
 
-    const urlParams = new URLSearchParams(location.search);
-    const defaultProject = (urlParams.get("project") || "Properties").trim();
-    document.getElementById("projectInput").value = defaultProject;
+// localStorage key (คงเดิม)
+const LS_TOKEN_KEY = "HP_AUTH_TOKEN";
 
-    function setErr(msg){
-      const e = document.getElementById("err");
-      if (!msg){
-        e.classList.add("hidden");
-        e.textContent = "";
+/** =========================
+ * URL / Alias / Back
+ * ========================= */
+const qs = new URLSearchParams(location.search);
+
+// อ่านค่า project จาก URL
+let projectRaw = (qs.get("project") || "").trim();
+
+// ✅ BEST: Alias map (สวยๆหน้าเว็บ → แท็บจริงในชีต)
+const PROJECT_ALIAS = {
+  "Properties": "HP00",   // <-- คุณใช้ Properties อยู่ ให้ชี้ไปแท็บจริงที่ล็อกอิน
+  "properties": "HP00",
+  "MASTER": "HP00",
+  "Master": "HP00"
+};
+
+// project ที่ใช้จริง
+let project = PROJECT_ALIAS[projectRaw] || projectRaw || "HP00";
+
+// back url (มาจาก details/goGateway)
+let back = (qs.get("back") || "").trim();
+try{ back = back ? decodeURIComponent(back) : ""; }catch(e){}
+
+// แสดงบน UI
+const projectInput = document.getElementById("projectInput");
+const pinInput = document.getElementById("pinInput");
+const errBox = document.getElementById("errBox");
+const loginBtn = document.getElementById("loginBtn");
+const chipProject = document.getElementById("chipProject");
+const chipBack = document.getElementById("chipBack");
+const miniNote = document.getElementById("miniNote");
+
+projectInput.value = projectRaw || project; // ให้ผู้ใช้เห็นค่าที่มากับลิงก์
+chipProject.textContent = "project: " + (projectRaw || project);
+chipBack.textContent = "back: " + (back ? back : "-");
+
+// แจ้ง note เล็กๆ
+if(projectRaw && PROJECT_ALIAS[projectRaw]){
+  miniNote.textContent = `Alias: ${projectRaw} → ${PROJECT_ALIAS[projectRaw]}`;
+}else{
+  miniNote.textContent = "";
+}
+
+/** =========================
+ * Helpers
+ * ========================= */
+function setError(msg){
+  errBox.style.display = "block";
+  errBox.textContent = msg;
+}
+function clearError(){
+  errBox.style.display = "none";
+  errBox.textContent = "";
+}
+function setLoading(on){
+  if(on){
+    loginBtn.classList.add("loading");
+    loginBtn.textContent = "LOGGING IN...";
+  }else{
+    loginBtn.classList.remove("loading");
+    loginBtn.innerHTML = `<span>LOGIN TO DASHBOARD</span><span aria-hidden="true">→</span>`;
+  }
+}
+
+/** JSONP (รองรับ GitHub Pages) */
+function jsonp(url, timeoutMs = 20000){
+  return new Promise((resolve, reject) => {
+    const cb = "cb_" + Math.random().toString(36).slice(2);
+    const script = document.createElement("script");
+    const timer = setTimeout(() => { cleanup(); reject(new Error("timeout")); }, timeoutMs);
+
+    function cleanup(){
+      clearTimeout(timer);
+      if (script.parentNode) script.parentNode.removeChild(script);
+      try{ delete window[cb]; }catch(e){ window[cb] = undefined; }
+    }
+
+    window[cb] = (data) => { cleanup(); resolve(data); };
+
+    const sep = url.includes("?") ? "&" : "?";
+    script.src = url + sep + "callback=" + encodeURIComponent(cb) + "&t=" + Date.now();
+    script.onerror = () => { cleanup(); reject(new Error("jsonp_error")); };
+    document.body.appendChild(script);
+  });
+}
+
+/** redirect after login */
+function goAfterLogin(token){
+  // เก็บ token ให้ทุกหน้าใช้
+  try{ localStorage.setItem(LS_TOKEN_KEY, token); }catch(e){}
+
+  // ถ้ามี back → กลับไปหน้านั้น (และเติม token ให้)
+  if(back){
+    try{
+      const u = new URL(back, location.origin);
+      u.searchParams.set("project", project); // ใช้ project จริง
+      u.searchParams.set("token", token);
+      location.href = u.toString();
+      return;
+    }catch(e){
+      // ถ้า back ไม่เป็น URL เต็ม ให้พยายามแบบ path
+      const join = back.startsWith("/") ? back : ("/" + back);
+      location.href = join + (join.includes("?") ? "&" : "?") + "project=" + encodeURIComponent(project) + "&token=" + encodeURIComponent(token);
+      return;
+    }
+  }
+
+  // fallback → dashboard
+  location.href = `dashboard.html?project=${encodeURIComponent(project)}&token=${encodeURIComponent(token)}`;
+}
+
+/** =========================
+ * Login via GS (ให้ GS เป็นคนตัดสิน PIN)
+ * ========================= */
+async function doLogin(){
+  clearError();
+  setLoading(true);
+
+  // อ่านค่าจากช่อง
+  const projectTyped = (projectInput.value || "").trim();
+
+  // ใช้ alias ถ้าพิมพ์ Properties มา
+  project = PROJECT_ALIAS[projectTyped] || projectTyped || project;
+
+  const pin = (pinInput.value || "").trim();
+  if(!pin){
+    setLoading(false);
+    setError("กรุณาใส่ PIN");
+    pinInput.focus();
+    return;
+  }
+
+  try{
+    // ✅ ให้ GS ตรวจสิทธิ์ (mode=login)
+    const url =
+      `${SCRIPT_URL}?mode=login` +
+      `&project=${encodeURIComponent(project)}` +
+      `&pin=${encodeURIComponent(pin)}`;
+
+    const res = await jsonp(url, 20000);
+
+    // รูปแบบตอบกลับที่รองรับหลายแบบ
+    const ok = !!(res && (res.ok === true || res.success === true || res.status === "ok"));
+    const token = (res && (res.token || res.authToken || res.access_token)) ? String(res.token || res.authToken || res.access_token) : "";
+    const err = res && (res.error || res.message) ? String(res.error || res.message) : "";
+
+    if(!ok || !token){
+      setLoading(false);
+
+      // ✅ ถ้า GS บอกว่า project ไม่ถูกต้อง / ไม่เจอ
+      if((err || "").toLowerCase().includes("project")){
+        setError(err || "Project not configured (ตรวจชื่อแท็บใน Google Sheet / project param)");
         return;
       }
-      e.textContent = msg;
-      e.classList.remove("hidden");
+
+      // ✅ ถ้า PIN ผิด
+      setError(err || "PIN ไม่ถูกต้อง");
+      pinInput.focus();
+      pinInput.select?.();
+      return;
     }
 
-    function jsonp(url, timeoutMs = 12000){
-      return new Promise((resolve, reject) => {
-        const cbName = "cb_" + Math.random().toString(16).slice(2);
-        const script = document.createElement("script");
-        let done = false;
+    // success
+    setLoading(false);
+    goAfterLogin(token);
 
-        const timer = setTimeout(() => {
-          if (done) return;
-          done = true;
-          cleanup();
-          reject(new Error("Timeout ติดต่อ Web App ไม่ได้"));
-        }, timeoutMs);
+  }catch(e){
+    setLoading(false);
+    setError("Login ไม่สำเร็จ (ตรวจ Deploy Apps Script เป็น /exec และตั้งค่า Anyone / JSONP)");
+  }
+}
 
-        function cleanup(){
-          clearTimeout(timer);
-          try { delete window[cbName]; } catch(e){}
-          if (script && script.parentNode) script.parentNode.removeChild(script);
-        }
+/** events */
+loginBtn.addEventListener("click", doLogin);
+pinInput.addEventListener("keydown", (e)=>{ if(e.key === "Enter") doLogin(); });
+projectInput.addEventListener("keydown", (e)=>{ if(e.key === "Enter") pinInput.focus(); });
 
-        window[cbName] = (data) => {
-          if (done) return;
-          done = true;
-          cleanup();
-          resolve(data);
-        };
-
-        script.onerror = () => {
-          if (done) return;
-          done = true;
-          cleanup();
-          reject(new Error("โหลดสคริปต์ไม่สำเร็จ (script error)"));
-        };
-
-        const join = url.includes("?") ? "&" : "?";
-        script.src = url + join + "callback=" + encodeURIComponent(cbName);
-        document.body.appendChild(script);
-      });
-    }
-
-    async function doLogin(){
-      setErr("");
-      const btn = document.getElementById("loginBtn");
-      btn.disabled = true;
-      const old = btn.innerText;
-      btn.innerText = "LOGGING IN...";
-
-      const project = (document.getElementById("projectInput").value || "Properties").trim();
-      const pin = (document.getElementById("pinInput").value || "").trim();
-
-      try{
-        if (!pin) throw new Error("กรุณากรอก PIN");
-
-        const url =
-          API_URL +
-          `?mode=login&project=${encodeURIComponent(project)}&pin=${encodeURIComponent(pin)}&t=${Date.now()}`;
-
-        const out = await jsonp(url);
-        if (!out || !out.ok) throw new Error((out && out.error) ? out.error : "Login failed");
-
-        localStorage.setItem("HP_AUTH_TOKEN", out.token);
-        localStorage.setItem("HP_AUTH_ROLE", out.role);
-        localStorage.setItem("HP_AUTH_PROJECT", out.project || "Properties");
-        localStorage.setItem("HP_AUTH_EXPIRES", String(out.expiresAt || ""));
-
-        // ✅ forward ไป dashboard พร้อม project=Properties
-        location.href = `dashboard.html?project=${encodeURIComponent(out.project || "Properties")}`;
-      }catch(err){
-        setErr(err.message || "Invalid PIN");
-        btn.disabled = false;
-        btn.innerText = old;
-      }
-    }
-
-    document.getElementById("loginBtn").addEventListener("click", doLogin);
-    document.getElementById("pinInput").addEventListener("keydown", (ev)=>{
-      if (ev.key === "Enter") doLogin();
-    });
-  </script>
+// โฟกัส PIN ให้เลย
+setTimeout(()=> pinInput.focus(), 50);
+</script>
 </body>
 </html>
-
