@@ -4,224 +4,257 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>smart properties system · details</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
   <style>
-    body{font-family:Kanit,sans-serif}
-    .glass{
-      background:rgba(255,255,255,.14);
-      border:1px solid rgba(255,255,255,.28);
+    :root{
+      --bg:#0b1320;
+      --card:#ffffff;
+      --text:#0b1320;
+      --muted:#6b7a90;
+      --shadow:0 18px 46px rgba(0,0,0,.22);
+      --radius:26px;
+      --line:rgba(255,255,255,.18);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans Thai",sans-serif;
+      min-height:100vh;
+      background: radial-gradient(900px 520px at 10% 10%, rgba(255,255,255,.10), transparent 55%),
+                  radial-gradient(900px 520px at 90% 20%, rgba(255,255,255,.08), transparent 55%),
+                  linear-gradient(180deg, #0a1426, #071022 60%, #050b16);
+      color:#eaf0ff;
+      padding: 22px 12px 48px;
+    }
+    .wrap{max-width:1100px;margin:0 auto}
+    .hero{
+      background: rgba(255,255,255,.10);
+      border:1px solid var(--line);
+      border-radius: 34px;
+      padding: 26px 22px;
       backdrop-filter: blur(10px);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+    }
+    .kicker{letter-spacing:2px;font-weight:800;font-size:12px;opacity:.85}
+    .title{
+      margin:8px 0 0;
+      font-size:44px;
+      font-weight:1000;
+      letter-spacing:1px;
+      line-height:1.05;
+    }
+    .chips{margin-top:14px; display:flex; gap:10px; flex-wrap:wrap}
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.20);
+      font-weight:900;
+      font-size:13px;
+      color:#f1f5ff;
+      white-space:nowrap;
+    }
+    .btnBack{
+      border:none;
+      cursor:pointer;
+      padding:12px 16px;
+      border-radius:999px;
+      background: rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.20);
+      color:#fff;
+      font-weight:900;
+    }
+    .btnBack:active{transform:scale(.99)}
+    .panel{
+      margin-top:18px;
+      background: rgba(255,255,255,.94);
+      border: 1px solid rgba(255,255,255,.75);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      color: var(--text);
+      overflow:hidden;
+    }
+    .panelHead{
+      padding: 18px 18px 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      border-bottom:1px solid rgba(11,19,32,.10);
+    }
+    .panelTitle{
+      font-weight:1000;
+      font-size:18px;
+    }
+    .small{
+      font-size:12px;
+      color: rgba(11,19,32,.65);
+      font-weight:800;
+    }
+    .content{padding: 16px 18px 20px}
+    .grid{
+      display:grid;
+      gap:12px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 900px){
+      .grid{grid-template-columns: 1.2fr .8fr;}
     }
     .card{
-      background:rgba(255,255,255,.92);
-      border:1px solid rgba(255,255,255,.75);
-      box-shadow: 0 18px 40px rgba(0,0,0,.12);
-    }
-    .badge{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 12px;border-radius:999px;
-      font-weight:900;font-size:12px;
-      border:1px solid rgba(255,255,255,.65);
-      box-shadow: 0 10px 18px rgba(0,0,0,.10);
-      backdrop-filter: blur(6px);
-      max-width: 100%;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    }
-    .mini{
-      display:grid;place-items:center;
-      border-radius: 20px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      padding: 14px;
-      text-align:center;
-    }
-    .mini .k{font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#94a3b8}
-    .mini .v{font-size:18px;font-weight:900;color:#0f172a;margin-top:6px}
-    .btn{
+      background:#fff;
+      border:1px solid rgba(11,19,32,.10);
       border-radius: 18px;
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      font-size: 11px;
-      padding: 12px 14px;
+      padding:14px;
     }
-    .btn:active{transform:scale(.98)}
+    .row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding: 10px 0;
+      border-bottom:1px dashed rgba(11,19,32,.10);
+    }
+    .row:last-child{border-bottom:none}
+    .lbl{font-weight:900;color:rgba(11,19,32,.70)}
+    .val{font-weight:1000}
+    .imgWrap{
+      aspect-ratio: 16/10;
+      background:#eef3f8;
+      border-radius: 18px;
+      overflow:hidden;
+      border:1px solid rgba(11,19,32,.08);
+    }
+    .imgWrap img{width:100%;height:100%;object-fit:cover;display:block}
+    .errorBox{
+      margin-top:18px;
+      background: rgba(255,255,255,.94);
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,.75);
+      box-shadow: var(--shadow);
+      color:#0b1320;
+      padding: 18px;
+      text-align:center;
+      font-weight:1000;
+    }
+    .errorSub{
+      margin-top:6px;
+      font-weight:900;
+      color: rgba(11,19,32,.70);
+      font-size:13px;
+    }
+    .actions{margin-top:12px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+    .aBtn{
+      border:none; cursor:pointer;
+      padding:12px 16px;
+      border-radius: 999px;
+      font-weight:1000;
+    }
+    .aBtn.primary{background:#0b1320;color:#fff}
+    .aBtn.ghost{background:rgba(11,19,32,.08);color:#0b1320}
   </style>
 </head>
 
-<body class="min-h-screen bg-slate-900 italic">
-  <div class="max-w-5xl mx-auto p-4 md:p-10">
-    <!-- Header -->
-    <div class="rounded-[2.5rem] p-6 sm:p-8 md:p-10 text-white shadow-2xl glass">
-      <div class="flex items-start justify-between gap-4">
-        <div class="min-w-0">
-          <p class="text-white/80 font-extrabold uppercase tracking-[0.25em] text-xs">Property Detail</p>
-          <h1 id="hpTitle" class="text-3xl sm:text-4xl font-extrabold tracking-tight mt-2 truncate">HP-XXXX</h1>
-          <div class="flex flex-wrap gap-2 mt-3">
-            <span id="badgeSys" class="badge bg-white/80 text-slate-900">System: -</span>
-            <span id="badgeStatus" class="badge bg-white/80 text-slate-900">Status: -</span>
-          </div>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <div class="kicker">PROPERTY DETAIL</div>
+        <div class="title" id="hpTitle">—</div>
+        <div class="chips">
+          <div class="chip" id="sysChip">System: —</div>
+          <div class="chip" id="statusChip">Status: —</div>
+          <div class="chip" id="pjChip">PJ: —</div>
         </div>
+      </div>
+      <button class="btnBack" id="backBtn">BACK</button>
+    </div>
 
-        <div class="flex gap-2">
-          <a id="btnBack" class="btn bg-white/10 hover:bg-white/20 text-white" href="index.html">Back</a>
-          <a id="btnEdit" class="btn bg-emerald-600 hover:bg-emerald-500 text-white hidden" href="#">Edit</a>
+    <div id="mainPanel" class="panel" style="display:none;">
+      <div class="panelHead">
+        <div>
+          <div class="panelTitle">รายละเอียดทรัพย์</div>
+          <div class="small" id="subInfo">—</div>
+        </div>
+        <div class="small" id="priceInfo">—</div>
+      </div>
+
+      <div class="content">
+        <div class="grid">
+          <div class="card">
+            <div class="imgWrap">
+              <img id="coverImg" alt="cover" referrerpolicy="no-referrer" />
+            </div>
+          </div>
+
+          <div class="card" id="kvBox"></div>
         </div>
       </div>
     </div>
 
-    <!-- Not available -->
-    <div id="notAvailable" class="hidden mt-6 card rounded-[2rem] p-8 text-center">
-      <div class="text-2xl font-extrabold text-slate-900 mb-2">รายการนี้ยังไม่เปิดออนไลน์</div>
-      <div class="text-slate-500 font-bold text-sm">System Status ไม่ใช่ Live</div>
-      <div class="mt-4 flex justify-center gap-2">
-        <a class="btn bg-slate-900 hover:bg-blue-600 text-white" href="index.html">Go Index</a>
-        <a id="btnGoGateway" class="btn bg-white text-slate-900 border border-slate-200" href="gateway.html">Login</a>
-      </div>
-    </div>
-
-    <!-- Content -->
-    <div id="content" class="hidden">
-      <!-- Gallery -->
-      <div class="mt-6 card rounded-[2rem] overflow-hidden">
-        <div class="aspect-[16/10] bg-slate-100" id="coverBox">
-          <div class="w-full h-full grid place-items-center text-5xl">🖼️</div>
-        </div>
-        <div class="p-5">
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="thumbs"></div>
-        </div>
-      </div>
-
-      <!-- Quick facts -->
-      <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div class="mini">
-          <div class="k">Price</div>
-          <div class="v" id="vPrice">฿0</div>
-        </div>
-        <div class="mini">
-          <div class="k">Beds / Baths</div>
-          <div class="v"><span id="vBed">-</span> / <span id="vBath">-</span></div>
-        </div>
-        <div class="mini">
-          <div class="k">Living Area</div>
-          <div class="v"><span id="vLiving">-</span> m²</div>
-        </div>
-      </div>
-
-      <!-- Data -->
-      <div class="mt-6 card rounded-[2rem] p-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <div class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">Plot / Type</div>
-            <div class="text-xl font-extrabold text-slate-900 mt-1">
-              <span id="vPlot">-</span> · <span id="vType">-</span>
-            </div>
-            <div class="text-slate-500 font-bold text-sm mt-1" id="vProjectName"></div>
-            <div class="text-slate-500 font-bold text-sm mt-2" id="vAddress"></div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div class="mini">
-              <div class="k">Land</div>
-              <div class="v"><span id="vLandW">-</span> sq.w</div>
-              <div class="text-xs font-bold text-slate-400 mt-1"><span id="vLandM">-</span> sq.m</div>
-            </div>
-            <div class="mini">
-              <div class="k">Pool</div>
-              <div class="v"><span id="vPoolSize">-</span></div>
-              <div class="text-xs font-bold text-slate-400 mt-1"><span id="vPoolDepth">-</span></div>
-            </div>
-            <div class="mini">
-              <div class="k">Furnishing</div>
-              <div class="v" id="vFurn">-</div>
-            </div>
-            <div class="mini">
-              <div class="k">Zone</div>
-              <div class="v" id="vZone">-</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-5 border-t pt-5">
-          <div class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">Description</div>
-          <div class="mt-2 text-slate-700 font-medium leading-relaxed whitespace-pre-wrap" id="vDesc">-</div>
-        </div>
-      </div>
-
-      <!-- Links -->
-      <div class="mt-6 card rounded-[2rem] p-6">
-        <div class="flex items-center justify-between gap-3 flex-wrap">
-          <div>
-            <div class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">External Links</div>
-            <div class="text-xl font-extrabold text-slate-900 mt-1">Open / Download</div>
-          </div>
-          <div class="flex gap-2 flex-wrap">
-            <a id="lnkFB" class="btn bg-blue-600 hover:bg-blue-500 text-white hidden" target="_blank" rel="noopener">FB</a>
-            <a id="lnkVT" class="btn bg-purple-600 hover:bg-purple-500 text-white hidden" target="_blank" rel="noopener">Virtual Tour</a>
-            <a id="lnkMap" class="btn bg-emerald-600 hover:bg-emerald-500 text-white hidden" target="_blank" rel="noopener">Map</a>
-          </div>
-        </div>
-
-        <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <a id="pdfSales" class="btn bg-slate-900 hover:bg-blue-600 text-white hidden" target="_blank" rel="noopener">Sales PDF</a>
-          <a id="pdfMat" class="btn bg-slate-900 hover:bg-blue-600 text-white hidden" target="_blank" rel="noopener">Material PDF</a>
-          <a id="pdfFloor" class="btn bg-slate-900 hover:bg-blue-600 text-white hidden" target="_blank" rel="noopener">Floor Plan</a>
-        </div>
-
-        <div id="mapFrameWrap" class="hidden mt-5 overflow-hidden rounded-[1.75rem] border border-slate-200">
-          <iframe id="mapFrame" class="w-full h-[360px]" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
+    <div id="errPanel" class="errorBox" style="display:none;">
+      โหลดข้อมูลไม่สำเร็จ
+      <div class="errorSub" id="errMsg">—</div>
+      <div class="actions">
+        <button class="aBtn primary" id="goIndexBtn">GO INDEX</button>
+        <button class="aBtn ghost" id="goLoginBtn">LOGIN</button>
       </div>
     </div>
   </div>
 
   <script>
     /**********************************************************
-     * CONFIG (Web App URL ใหม่ของคุณ)
+     * CONFIG
      **********************************************************/
     const API_URL = "https://script.google.com/macros/s/AKfycbyg8elBgyIJaXG3vCrovI_dVB_JPgo0elSSa0HsCiFg8abSheSzAGmP8bY3ptaLZaEu/exec";
 
-    const params = new URLSearchParams(location.search);
-    const HP_ID = (params.get("id") || "").trim();
-    const PROJECT = (params.get("project") || "HP00").trim();
+    const qs = new URLSearchParams(location.search);
+    const PROJECT = (qs.get("project") || "properties").trim();
+    const HPID = (qs.get("hpId") || qs.get("id") || "").trim();
 
-    const TOKEN = (params.get("token") || localStorage.getItem("HP_AUTH_TOKEN") || "").trim();
-    const ROLE  = (localStorage.getItem("HP_AUTH_ROLE") || "").trim();
+    // ✅ สำคัญ: โหมดดูทั่วไปห้ามส่ง token
+    // ถ้าต้องการดูแบบแอดมินค่อยเปิดด้วย &admin=1
+    const ADMIN_MODE = String(qs.get("admin") || "") === "1";
 
-    const $ = (id)=>document.getElementById(id);
+    const TOKEN_KEY = "SP_TOKEN"; // ถ้า gateway ของคุณใช้ key คนละชื่อ เปลี่ยนตรงนี้ให้ตรง
+    const ROLE_KEY  = "SP_ROLE";
 
-    function esc(s){ return String(s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-    function fmtPrice(v){
-      const n = Number(String(v||"").replace(/,/g,""));
-      if (!isFinite(n) || n<=0) return "฿0";
-      return "฿" + n.toLocaleString("en-US");
-    }
-    function normSys(v){
-      const low = String(v||"").trim().toLowerCase();
-      if(low==="live") return "Live";
-      if(low==="pending") return "Pending";
-      if(low==="offline") return "Offline";
-      return String(v||"").trim();
-    }
-    function isLive(v){ return normSys(v) === "Live"; }
+    const gatewayUrl = `gateway.html?project=${encodeURIComponent(PROJECT)}`;
+    const indexUrl = `index.html?project=${encodeURIComponent(PROJECT)}`;
 
-    // JSONP helper
+    const el = (id)=>document.getElementById(id);
+
+    el("pjChip").textContent = `PJ: ${PROJECT}`;
+    el("hpTitle").textContent = HPID || "—";
+
+    el("backBtn").addEventListener("click", ()=>{
+      // กลับ index ของโปรเจคเดียวกัน
+      location.href = indexUrl;
+    });
+
+    el("goIndexBtn").addEventListener("click", ()=> location.href = indexUrl);
+    el("goLoginBtn").addEventListener("click", ()=>{
+      // ส่ง returnTo กลับมาหน้านี้
+      const returnTo = encodeURIComponent(location.pathname + location.search);
+      location.href = gatewayUrl + `&returnTo=${returnTo}`;
+    });
+
     function jsonp_(paramsObj, timeoutMs = 15000){
       return new Promise((resolve, reject) => {
         const cbName = "cb_" + Math.random().toString(16).slice(2);
-        const urlParams = new URLSearchParams();
-        Object.entries(paramsObj||{}).forEach(([k,v])=>{
-          if(v===undefined || v===null) return;
-          urlParams.set(k, String(v));
+        const q = new URLSearchParams();
+        Object.entries(paramsObj || {}).forEach(([k,v])=>{
+          if(v===undefined || v===null || v==="") return;
+          q.set(k, String(v));
         });
-        urlParams.set("callback", cbName);
-        urlParams.set("t", Date.now());
+        q.set("callback", cbName);
+        q.set("t", Date.now());
 
         const script = document.createElement("script");
         let done = false;
 
-        const timer = setTimeout(()=>{
+        const timer = setTimeout(() => {
           if(done) return;
           done = true;
           cleanup();
@@ -248,185 +281,129 @@
           reject(new Error("JSONP network error"));
         };
 
-        script.src = API_URL + "?" + urlParams.toString();
+        script.src = API_URL + "?" + q.toString();
         document.body.appendChild(script);
       });
     }
 
-    async function getDetail_(){
-      try{
-        return await jsonp_({ mode:"getUnitDetail", hpId: HP_ID, project: PROJECT, token: TOKEN });
-      }catch(_){
-        const url = new URL(API_URL);
-        url.searchParams.set("mode","getUnitDetail");
-        url.searchParams.set("hpId", HP_ID);
-        url.searchParams.set("project", PROJECT);
-        if(TOKEN) url.searchParams.set("token", TOKEN);
-        const res = await fetch(url.toString(), { cache:"no-store" });
-        return await res.json();
-      }
+    function setError(msg){
+      el("mainPanel").style.display = "none";
+      el("errPanel").style.display = "block";
+      el("errMsg").textContent = msg || "—";
     }
 
-    function showEl(id, on){ $(id).classList.toggle("hidden", !on); }
-
-    function setBadge(el, label, value){
-      el.textContent = `${label}: ${value || "-"}`;
+    function fmtPrice(v){
+      const n = Number(String(v||"").replace(/,/g,""));
+      if (!isFinite(n) || n<=0) return "฿0";
+      return "฿" + n.toLocaleString("en-US");
     }
 
-    function setLink(elId, url){
-      const el = $(elId);
-      const u = String(url||"").trim();
-      if(!u){ el.classList.add("hidden"); el.removeAttribute("href"); return; }
-      el.classList.remove("hidden");
-      el.href = u;
+    function safeText(v){ return String(v==null ? "" : v).trim(); }
+
+    function buildKV(obj){
+      const keys = [
+        ["Plot","Plot"],
+        ["Type","Type"],
+        ["Bedrooms","Bedrooms"],
+        ["Bathrooms","Bathrooms"],
+        ["Living_Area_sq_m","Living Area (sq.m)"],
+        ["Land_Area_sq_w","Land Area (sq.w)"],
+        ["Price","Price"],
+        ["District","District"],
+        ["SubDistrict","SubDistrict"],
+        ["Zone","Zone"]
+      ];
+
+      const html = keys.map(([k,label])=>{
+        const val = safeText(obj[k]);
+        if(!val) return "";
+        return `<div class="row"><div class="lbl">${label}</div><div class="val">${val}</div></div>`;
+      }).join("");
+
+      el("kvBox").innerHTML = html || `<div class="small">ไม่มีข้อมูล</div>`;
     }
 
-    // Map embed helper: ถ้าเป็น maps.app.goo.gl จะ embed ไม่ได้เสมอไป
-    // เราจะพยายามใช้ embed แบบ query ถ้าเป็น URL ปกติ ให้ใส่ตรง iframe
-    function trySetMapEmbed(mapUrl){
-      const raw = String(mapUrl||"").trim();
-      if(!raw){ showEl("mapFrameWrap", false); return; }
+    function applyData(obj){
+      const sys = safeText(obj.System_Status || obj["System Status"]);
+      const st  = safeText(obj.Status);
+      el("sysChip").textContent = `System: ${sys || "-"}`;
+      el("statusChip").textContent = `Status: ${st || "-"}`;
 
-      // หากเป็น google.com/maps หรือ www.google.com/maps -> ใช้ embed?pb ไม่ได้
-      // ใช้วิธีง่าย: embed แบบ q=
-      let embed = "";
-      try{
-        const u = new URL(raw);
-        const host = u.hostname.toLowerCase();
-        if(host.includes("google.") && u.pathname.includes("/maps")){
-          embed = "https://www.google.com/maps?q=" + encodeURIComponent(raw) + "&output=embed";
-        } else if(host.includes("maps.app.goo.gl")){
-          // short link embed ยาก -> ใช้ q= link แทน
-          embed = "https://www.google.com/maps?q=" + encodeURIComponent(raw) + "&output=embed";
-        } else {
-          embed = "https://www.google.com/maps?q=" + encodeURIComponent(raw) + "&output=embed";
-        }
-      }catch(_){
-        embed = "https://www.google.com/maps?q=" + encodeURIComponent(raw) + "&output=embed";
-      }
+      el("subInfo").textContent = safeText(obj.Project_Name || "") || "—";
+      el("priceInfo").textContent = fmtPrice(obj.Price || "");
 
-      $("mapFrame").src = embed;
-      showEl("mapFrameWrap", true);
-    }
-
-    function renderGallery(thumb, listStr){
-      const coverBox = $("coverBox");
-      const thumbs = $("thumbs");
-      thumbs.innerHTML = "";
-
-      const urls = [];
-      const t = String(thumb||"").trim();
-      if(t) urls.push(t);
-
-      if(listStr){
-        String(listStr).split(",").map(s=>s.trim()).filter(Boolean).forEach(u=>{
-          if(!urls.includes(u)) urls.push(u);
-        });
+      const cover = safeText(obj.Thumbnail_Image || "");
+      if(cover){
+        el("coverImg").src = cover;
+        el("coverImg").style.display = "block";
+      }else{
+        el("coverImg").style.display = "none";
       }
 
-      // cover
-      if(urls.length){
-        coverBox.innerHTML = `<img src="${esc(urls[0])}" class="w-full h-full object-cover" referrerpolicy="no-referrer">`;
-      } else {
-        coverBox.innerHTML = `<div class="w-full h-full grid place-items-center text-5xl">🖼️</div>`;
-      }
+      buildKV(obj);
 
-      // thumbs
-      urls.slice(0, 12).forEach(u=>{
-        const a = document.createElement("button");
-        a.className = "aspect-square rounded-2xl overflow-hidden border border-slate-200 bg-slate-100";
-        a.innerHTML = `<img src="${esc(u)}" class="w-full h-full object-cover" referrerpolicy="no-referrer">`;
-        a.addEventListener("click", ()=>{
-          coverBox.innerHTML = `<img src="${esc(u)}" class="w-full h-full object-cover" referrerpolicy="no-referrer">`;
-          window.scrollTo({ top:0, behavior:"smooth" });
-        });
-        thumbs.appendChild(a);
-      });
+      el("mainPanel").style.display = "block";
+      el("errPanel").style.display = "none";
     }
 
-    async function init(){
-      $("btnBack").href = `index.html?project=${encodeURIComponent(PROJECT)}`;
-      $("btnGoGateway").href = `gateway.html?project=${encodeURIComponent(PROJECT)}`;
-      $("hpTitle").textContent = HP_ID || "HP-XXXX";
+    function clearBadToken(){
+      try{ localStorage.removeItem(TOKEN_KEY); }catch(_){}
+      try{ localStorage.removeItem(ROLE_KEY); }catch(_){}
+    }
 
-      if(!HP_ID){
-        showEl("notAvailable", true);
-        $("notAvailable").querySelector(".text-2xl").textContent = "Missing id";
+    async function load(){
+      if(!HPID){
+        setError("Missing hpId / id");
         return;
       }
 
+      // ✅ โหมดทั่วไป: ไม่ส่ง token
+      // ✅ โหมดแอดมิน: ส่ง token ถ้ามี
+      const token = ADMIN_MODE ? (localStorage.getItem(TOKEN_KEY) || "") : "";
+
       try{
-        const data = await getDetail_();
-        if(data && data.error) throw new Error(data.error);
+        const raw = await jsonp_({
+          mode: "getUnitDetail",
+          project: PROJECT,
+          hpId: HPID,
+          token: token
+        });
 
-        const sys = normSys(data.System_Status || data.system_status || data.sysStatus || "");
-        const status = String(data.Status || data.status || "").trim();
+        // ถ้า GS ส่ง error มา
+        if(raw && raw.error){
+          const em = String(raw.error || "");
 
-        setBadge($("badgeSys"), "System", sys || "-");
-        setBadge($("badgeStatus"), "Status", status || "-");
+          // ✅ ถ้า token เสีย/หมดอายุ: ล้าง token แล้ว “ลองโหลดใหม่แบบ public” ทันที
+          if(em.toLowerCase().includes("unauthorized") || em.toLowerCase().includes("token")){
+            clearBadToken();
 
-        // rule: public view only Live
-        const live = isLive(sys);
-        const allowPreview = live || (!!TOKEN); // ถ้ามี token ให้ดูได้ (admin preview)
-        if(!allowPreview){
-          showEl("notAvailable", true);
-          showEl("content", false);
+            // retry แบบไม่ส่ง token
+            const retry = await jsonp_({
+              mode: "getUnitDetail",
+              project: PROJECT,
+              hpId: HPID
+            });
+
+            if(retry && retry.error){
+              setError(String(retry.error));
+              return;
+            }
+
+            applyData(retry || {});
+            return;
+          }
+
+          setError(em);
           return;
         }
 
-        // show content
-        showEl("notAvailable", false);
-        showEl("content", true);
-
-        // edit button for admin
-        if(TOKEN){
-          const editHref = `edit.html?id=${encodeURIComponent(HP_ID)}&project=${encodeURIComponent(PROJECT)}&token=${encodeURIComponent(TOKEN)}`;
-          $("btnEdit").href = editHref;
-          $("btnEdit").classList.remove("hidden");
-        }
-
-        // fill
-        $("vPrice").textContent = fmtPrice(data.Price || data.price || "");
-        $("vBed").textContent = (data.Bedrooms ?? data.bedrooms ?? "-");
-        $("vBath").textContent = (data.Bathrooms ?? data.bathrooms ?? "-");
-        $("vLiving").textContent = (data.Living_Area_sq_m ?? data.livingSqm ?? data.living_area_sq_m ?? "-");
-
-        $("vPlot").textContent = (data.Plot ?? data.plot ?? "-");
-        $("vType").textContent = (data.Type ?? data.type ?? "-");
-        $("vProjectName").textContent = String(data.Project_Name ?? data.projectName ?? data.project_name ?? "").trim();
-        $("vAddress").textContent = String(data.Address ?? data.address ?? "").trim();
-
-        $("vLandW").textContent = (data.Land_Area_sq_w ?? data["Land Area (sq.w)"] ?? "-");
-        $("vLandM").textContent = (data.Land_Area_sq_m ?? data["Land Area (sq.m)"] ?? "-");
-        $("vPoolSize").textContent = (data.Pool_Size ?? data["Pool Size"] ?? "-");
-        $("vPoolDepth").textContent = (data.Pool_Depth ?? data["Pool Depth"] ?? "-");
-        $("vFurn").textContent = String(data.Furnishing ?? "").trim() || "-";
-        $("vZone").textContent = String(data.Zone ?? "").trim() || "-";
-        $("vDesc").textContent = String(data.Description ?? data.description ?? "").trim() || "-";
-
-        // links
-        setLink("lnkFB",  data.FB_Link || data.fb || "");
-        setLink("lnkVT",  data.Virtual_Tour || data.virtual_tour || "");
-        setLink("lnkMap", data.Map_Link || data.map || "");
-
-        setLink("pdfSales", data.Sales_Gallery || data.sales_gallery || "");
-        setLink("pdfMat",   data.Material_PDF || data.material_pdf || "");
-        setLink("pdfFloor", data.FloorPlan_PDF || data.floorplan_pdf || "");
-
-        // embed map (optional)
-        trySetMapEmbed(data.Map_Link || "");
-
-        // gallery
-        renderGallery(data.Thumbnail_Image || data.thumbnail || "", data.Image_List || data.image_list || "");
-      }catch(e){
-        console.error(e);
-        showEl("notAvailable", true);
-        $("notAvailable").querySelector(".text-2xl").textContent = "โหลดข้อมูลไม่สำเร็จ";
-        $("notAvailable").querySelector(".text-slate-500").textContent = e.message || "error";
+        applyData(raw || {});
+      }catch(err){
+        setError(err.message || String(err));
       }
     }
 
-    init();
+    load();
   </script>
 </body>
 </html>
