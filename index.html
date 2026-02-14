@@ -26,9 +26,7 @@
       color:var(--text);
       min-height:100vh;
     }
-
     .wrap{max-width:1000px;margin:0 auto;padding:12px 12px 38px}
-
     .topbar{
       background: rgba(255,255,255,.18);
       border: 1px solid var(--line);
@@ -91,11 +89,7 @@
     .iconbtn:active{transform:scale(.98)}
     .iconbtn svg{width:18px;height:18px;opacity:.9}
 
-    .controls{
-      margin-top:10px;
-      display:flex;
-      justify-content:center;
-    }
+    .controls{ margin-top:10px; display:flex; justify-content:center; }
     .controlsInner{
       width:100%;
       max-width:731px;
@@ -105,12 +99,7 @@
       justify-content:center;
       flex-wrap:nowrap;
     }
-    .selectWrap{
-      flex:1 1 0;
-      min-width: 0;
-      max-width: none;
-      position:relative;
-    }
+    .selectWrap{ flex:1 1 0; min-width:0; position:relative; }
     .select{
       width:100%;
       appearance:none;
@@ -138,15 +127,8 @@
       pointer-events:none;
     }
 
-    .grid{
-      margin-top:10px;
-      display:grid;
-      gap:12px;
-      grid-template-columns: 1fr;
-    }
-    @media (min-width: 880px){
-      .grid{grid-template-columns: repeat(3, minmax(0, 1fr));}
-    }
+    .grid{ margin-top:10px; display:grid; gap:12px; grid-template-columns:1fr; }
+    @media (min-width: 880px){ .grid{grid-template-columns:repeat(3, minmax(0,1fr));} }
 
     .card{
       background: rgba(255,255,255,.92);
@@ -155,106 +137,63 @@
       overflow:hidden;
       box-shadow: var(--shadow);
     }
-    .cover{
-      position:relative;
-      aspect-ratio: 16/10;
-      background:#e9eef5;
-      overflow:hidden;
-    }
-    .cover img{
-      width:100%;height:100%;
-      object-fit:cover;
-      display:block;
-      transform: translateZ(0);
-    }
+    .cover{ position:relative; aspect-ratio:16/10; background:#e9eef5; overflow:hidden; }
+    .cover img{ width:100%;height:100%; object-fit:cover; display:block; transform:translateZ(0); }
     .cover .skeleton{
       position:absolute;inset:0;
-      background: linear-gradient(90deg, #e9eef5 0%, #f4f7fb 40%, #e9eef5 80%);
-      background-size: 200% 100%;
+      background: linear-gradient(90deg,#e9eef5 0%,#f4f7fb 40%,#e9eef5 80%);
+      background-size:200% 100%;
       animation: shimmer 1.2s linear infinite;
     }
     @keyframes shimmer{0%{background-position:0 0}100%{background-position:200% 0}}
 
     .badgeStatus{
-      position:absolute;
-      top:10px; right:10px;
+      position:absolute; top:10px; right:10px;
       padding:8px 12px;
-      border-radius: 999px;
+      border-radius:999px;
       font-weight:1000;
       font-size:12px;
-      letter-spacing:.2px;
-      box-shadow: 0 10px 20px rgba(0,0,0,.10);
-      border: 1px solid rgba(255,255,255,.7);
+      box-shadow:0 10px 20px rgba(0,0,0,.10);
+      border:1px solid rgba(255,255,255,.7);
       backdrop-filter: blur(6px);
-      max-width: 75%;
+      max-width:75%;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
 
     .body{padding:10px 12px 12px}
-    .row1{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:8px;
-    }
-    .plotLine{
-      font-weight:1000;
-      color: rgba(11,19,32,.75);
-      letter-spacing:.2px;
-      font-size:14px;
-    }
-    .price{
-      font-size:17px;
-      font-weight:1000;
-      white-space:nowrap;
-    }
+    .row1{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;}
+    .plotLine{font-weight:1000;color:rgba(11,19,32,.75);font-size:14px;}
+    .price{font-size:17px;font-weight:1000;white-space:nowrap;}
 
-    .meta{
-      margin-top:8px;
-      display:flex;
-      gap:8px;
-      flex-wrap:nowrap;
-    }
+    .meta{ margin-top:8px; display:flex; gap:8px; flex-wrap:nowrap; }
     .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
+      display:inline-flex; align-items:center; gap:6px;
       padding:8px 8px;
-      border-radius: 999px;
+      border-radius:999px;
       background: rgba(11,19,32,.04);
-      border: 1px solid rgba(11,19,32,.08);
+      border:1px solid rgba(11,19,32,.08);
       font-weight:900;
       color: rgba(11,19,32,.78);
-      min-width: 0;
-      flex: 1 1 0;
+      min-width:0;
+      flex:1 1 0;
       justify-content:center;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
       font-size:14px;
     }
-    .pill .ico{
-      font-size:16px;
-      line-height:1;
-      opacity:.95;
-      flex:0 0 auto;
-    }
-    .pill .lbl{
-      font-weight:1000;
-      letter-spacing:.2px;
-    }
+    .pill .ico{font-size:16px;line-height:1;opacity:.95;flex:0 0 auto;}
+    .pill .lbl{font-weight:1000;letter-spacing:.2px;}
 
     .btn{
       margin-top:10px;
       width:100%;
       border:none;
-      border-radius: 16px;
+      border-radius:16px;
       padding:12px 12px;
       font-size:15px;
       font-weight:1000;
-      background: #c6f0d8;
+      background:#c6f0d8;
       color: rgba(11,19,32,.86);
       cursor:pointer;
     }
@@ -280,26 +219,21 @@
       background: rgba(11,19,32,.88);
       color:#fff;
       padding:10px 14px;
-      border-radius: 999px;
+      border-radius:999px;
       font-weight:800;
       font-size:13px;
       opacity:0;
       pointer-events:none;
       transition: opacity .2s ease, transform .2s ease;
       z-index:9999;
-      max-width: 94vw;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      max-width:94vw;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
     .toast.show{opacity:1; transform:translateX(-50%) translateY(-6px);}
 
     .loader{
-      position:fixed;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      position:fixed; inset:0;
+      display:flex; align-items:center; justify-content:center;
       z-index:10000;
       background: radial-gradient(1200px 700px at 10% 10%, rgba(255,255,255,.26), transparent 60%),
                   radial-gradient(1100px 700px at 90% 30%, rgba(255,255,255,.18), transparent 60%),
@@ -314,47 +248,19 @@
       backdrop-filter: blur(10px);
       text-align:center;
     }
-    .loaderIcons{
-      display:flex;
-      gap:16px;
-      justify-content:center;
-      align-items:center;
-      margin-bottom:14px;
-      font-size:42px;
-    }
-    .wiggle{
-      display:inline-block;
-      animation: wiggle 1.05s ease-in-out infinite;
-      transform-origin: 50% 80%;
-      filter: drop-shadow(0 10px 16px rgba(0,0,0,.14));
-    }
-    .wiggle:nth-child(2){ animation-delay:.12s; }
-    .wiggle:nth-child(3){ animation-delay:.24s; }
+    .loaderIcons{display:flex;gap:16px;justify-content:center;align-items:center;margin-bottom:14px;font-size:42px;}
+    .wiggle{display:inline-block;animation:wiggle 1.05s ease-in-out infinite;transform-origin:50% 80%;filter:drop-shadow(0 10px 16px rgba(0,0,0,.14));}
+    .wiggle:nth-child(2){animation-delay:.12s;}
+    .wiggle:nth-child(3){animation-delay:.24s;}
     @keyframes wiggle{
-      0%   { transform: translateY(0) rotate(0deg) scale(1); }
-      35%  { transform: translateY(-8px) rotate(-5deg) scale(1.02); }
-      70%  { transform: translateY(0) rotate(5deg) scale(1); }
-      100% { transform: translateY(0) rotate(0deg) scale(1); }
+      0%{transform:translateY(0) rotate(0deg) scale(1);}
+      35%{transform:translateY(-8px) rotate(-5deg) scale(1.02);}
+      70%{transform:translateY(0) rotate(5deg) scale(1);}
+      100%{transform:translateY(0) rotate(0deg) scale(1);}
     }
-    .loaderText{
-      font-weight:1000;
-      letter-spacing:1px;
-      font-size:22px;
-      color: rgba(255,255,255,.92);
-      text-shadow: 0 10px 18px rgba(0,0,0,.20);
-    }
-    .loaderSub{
-      margin-top:8px;
-      font-weight:800;
-      font-size:14px;
-      color: rgba(255,255,255,.85);
-      opacity:.95;
-    }
-    .loader.hide{
-      opacity:0;
-      pointer-events:none;
-      transition: opacity .22s ease;
-    }
+    .loaderText{font-weight:1000;letter-spacing:1px;font-size:22px;color: rgba(255,255,255,.92);text-shadow:0 10px 18px rgba(0,0,0,.20);}
+    .loaderSub{margin-top:8px;font-weight:800;font-size:14px;color: rgba(255,255,255,.85);opacity:.95;}
+    .loader.hide{opacity:0;pointer-events:none;transition: opacity .22s ease;}
   </style>
 </head>
 
@@ -367,7 +273,7 @@
         <span class="wiggle">🌴</span>
       </div>
       <div class="loaderText">Smart Properties System</div>
-      <div class="loaderSub" id="loaderSub">Syncing database...</div>
+      <div class="loaderSub">Syncing database...</div>
     </div>
   </div>
 
@@ -378,8 +284,7 @@
         <p class="title" id="masterVill">Master Vill</p>
         <div class="subtitle">
           <span class="chip" id="countChip">0 items</span>
-          <!-- ✅ debug -->
-          <span class="chip" id="debugChip" title="Project ที่กำลังเรียก API">PJ: -</span>
+          <span class="chip" id="pjChip">PJ: -</span>
         </div>
       </div>
       <a class="iconbtn" id="gatewayBtn" href="#" aria-label="Gateway">
@@ -418,14 +323,11 @@
     /**********************************************************
      * CONFIG
      **********************************************************/
-    const API_URL = "https://script.google.com/macros/s/AKfycbyTeJrl7A5D6nSjcxBsMAmfT0YcopmjMqI5YuXZ65FOXnWziWwe_j1FocdlaWWlQePR/exec";
-
-    // ✅ สำคัญ: ถ้า URL ไม่มี ?project= ให้เดาจากชื่อโฟลเดอร์เว็บก่อน
-    // - ถ้าเว็บนี้คือ CoCo-Hua-Hin-88 ให้ตั้ง DEFAULT เป็น project_002 (แก้ตรงนี้ได้ทันที)
-    const DEFAULT_PROJECT = "project_002";
+    const API_URL = "https://script.google.com/macros/s/AKfycbyg8elBgyIJaXG3vCrovI_dVB_JPgo0elSSa0HsCiFg8abSheSzAGmP8bY3ptaLZaEu/exec";
 
     const urlParams = new URLSearchParams(location.search);
-    const PROJECT = (urlParams.get("project") || DEFAULT_PROJECT).trim();
+    // ✅ ค่าเริ่มต้นเป็น properties ตามมาตรฐานใหม่
+    const PROJECT = (urlParams.get("project") || "properties").trim();
 
     const GATEWAY_URL = "gateway.html";
     const DETAILS_URL = "details.html?id=";
@@ -444,12 +346,7 @@
       el.textContent = msg;
       el.classList.add("show");
       clearTimeout(toast._t);
-      toast._t = setTimeout(()=>el.classList.remove("show"), 2600);
-    }
-
-    function setLoaderSub(msg){
-      const el = $("loaderSub");
-      if(el) el.textContent = msg || "Syncing database...";
+      toast._t = setTimeout(()=>el.classList.remove("show"), 2200);
     }
 
     function fmtPrice(v){
@@ -470,7 +367,7 @@
     function normalizePlot(p){ return String(p||"").trim(); }
     function isLiveSysStatus(v){ return String(v||"").trim().toLowerCase() === "live"; }
 
-    const CACHE_KEY = `SP_UNITLIST_${PROJECT}_v3_liveOnly_jsonp`;
+    const CACHE_KEY = `SP_UNITLIST_${PROJECT}_v1_properties`;
 
     function readCache(){
       try{
@@ -483,21 +380,19 @@
       }catch(_){ return null; }
     }
     function writeCache(data){
-      try{
-        sessionStorage.setItem(CACHE_KEY, JSON.stringify({ts:Date.now(), data}));
-      }catch(_){}
+      try{ sessionStorage.setItem(CACHE_KEY, JSON.stringify({ts:Date.now(), data})); }catch(_){}
     }
 
     function jsonp_(paramsObj, timeoutMs = 15000){
       return new Promise((resolve, reject) => {
         const cbName = "cb_" + Math.random().toString(16).slice(2);
-        const sp = new URLSearchParams();
-        Object.entries(paramsObj || {}).forEach(([k,v]) => {
-          if (v === undefined || v === null) return;
-          sp.set(k, String(v));
+        const q = new URLSearchParams();
+        Object.entries(paramsObj || {}).forEach(([k,v])=>{
+          if(v===undefined || v===null) return;
+          q.set(k, String(v));
         });
-        sp.set("callback", cbName);
-        sp.set("t", Date.now());
+        q.set("callback", cbName);
+        q.set("t", Date.now());
 
         const script = document.createElement("script");
         let done = false;
@@ -511,25 +406,25 @@
 
         function cleanup(){
           clearTimeout(timer);
-          try { delete window[cbName]; } catch(e){ window[cbName] = undefined; }
-          if (script && script.parentNode) script.parentNode.removeChild(script);
+          try{ delete window[cbName]; }catch(e){ window[cbName]=undefined; }
+          if(script && script.parentNode) script.parentNode.removeChild(script);
         }
 
-        window[cbName] = (data) => {
+        window[cbName] = (data)=>{
           if(done) return;
           done = true;
           cleanup();
           resolve(data);
         };
 
-        script.onerror = () => {
+        script.onerror = ()=>{
           if(done) return;
           done = true;
           cleanup();
           reject(new Error("JSONP network error"));
         };
 
-        script.src = API_URL + "?" + sp.toString();
+        script.src = API_URL + "?" + q.toString();
         document.body.appendChild(script);
       });
     }
@@ -543,13 +438,11 @@
 
     async function fetchUnitList(){
       const cached = readCache();
-      if (cached) return cached;
+      if(cached) return cached;
 
-      setLoaderSub(`Loading project: ${PROJECT} ...`);
       const raw = await jsonp_({ mode:"getUnitList", project: PROJECT });
       const list = unwrapListResponse_(raw);
-
-      if (!Array.isArray(list)) {
+      if(!Array.isArray(list)){
         const err = (raw && raw.error) ? raw.error : "API invalid";
         throw new Error(err);
       }
@@ -571,8 +464,7 @@
         if(p) set.add(p);
       });
       const plots = Array.from(set).sort((a,b)=>a.localeCompare(b, "en"));
-      const sel = $("plotSelect");
-      sel.innerHTML =
+      $("plotSelect").innerHTML =
         `<option value="__all__">Select Plot</option>` +
         plots.map(p=>`<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join("");
     }
@@ -598,89 +490,13 @@
       renderGrid();
     }
 
-    function renderGrid(){
-      const grid = $("grid");
-      grid.innerHTML = "";
-      $("empty").style.display = filtered.length ? "none" : "block";
-      $("countChip").textContent = `${filtered.length} items`;
-
-      filtered.forEach(item=>{
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const cover = document.createElement("div");
-        cover.className = "cover";
-
-        const sk = document.createElement("div");
-        sk.className = "skeleton";
-        cover.appendChild(sk);
-
-        const img = document.createElement("img");
-        img.alt = "image";
-        img.loading = "lazy";
-        img.decoding = "async";
-        img.referrerPolicy = "no-referrer";
-        img.dataset.src = String(item.thumbnail||"").trim() || "";
-        cover.appendChild(img);
-
-        const st = document.createElement("div");
-        st.className = "badgeStatus";
-        const style = statusStyle(item.status);
-        st.style.background = style.bg;
-        st.style.color = style.fg;
-        st.textContent = String(item.status||"").trim() || "—";
-        cover.appendChild(st);
-
-        const body = document.createElement("div");
-        body.className = "body";
-
-        const row1 = document.createElement("div");
-        row1.className = "row1";
-
-        const plotLine = document.createElement("div");
-        plotLine.className = "plotLine";
-        plotLine.textContent = normalizePlot(item.plot) ? `PLOT : ${normalizePlot(item.plot)}` : "PLOT : -";
-
-        const price = document.createElement("div");
-        price.className = "price";
-        price.textContent = fmtPrice(item.price);
-
-        row1.appendChild(plotLine);
-        row1.appendChild(price);
-
-        const meta = document.createElement("div");
-        meta.className = "meta";
-        meta.appendChild(pillIcon("bed", item.bedrooms || "-", "Beds"));
-        meta.appendChild(pillIcon("bath", item.bathrooms || "-", "Baths"));
-        meta.appendChild(pillIcon("area", item.livingSqm || "-", "m²"));
-
-        const btn = document.createElement("button");
-        btn.className = "btn";
-        btn.textContent = "More Details";
-        btn.addEventListener("click", ()=>{
-          if(!item.id) return;
-          location.href = DETAILS_URL + encodeURIComponent(item.id) + `&project=${encodeURIComponent(PROJECT)}`;
-        });
-
-        body.appendChild(row1);
-        body.appendChild(meta);
-        body.appendChild(btn);
-
-        card.appendChild(cover);
-        card.appendChild(body);
-        grid.appendChild(card);
-      });
-
-      setupLazyImages();
-    }
-
     function pillIcon(type, val, unitLabel){
       const el = document.createElement("div");
       el.className = "pill";
       let ico = "📐";
       let label = unitLabel || "";
-      if(type==="bed"){ ico = "🛏️"; }
-      if(type==="bath"){ ico = "🚿"; }
+      if(type==="bed") ico="🛏️";
+      if(type==="bath") ico="🚿";
       el.innerHTML = `<span class="ico">${ico}</span><span class="lbl">${escapeHtml(val)}${label ? " " + escapeHtml(label) : ""}</span>`;
       return el;
     }
@@ -699,12 +515,88 @@
             img.style.display = "none";
             return;
           }
-          img.onload = ()=>{ if(sk) sk.remove(); };
+          img.onload  = ()=>{ if(sk) sk.remove(); };
           img.onerror = ()=>{ if(sk) sk.remove(); };
           img.src = src;
         });
-      }, { rootMargin: "220px 0px" });
+      }, { rootMargin:"220px 0px" });
       imgs.forEach(img=>io.observe(img));
+    }
+
+    function renderGrid(){
+      const grid = $("grid");
+      grid.innerHTML = "";
+      $("empty").style.display = filtered.length ? "none" : "block";
+      $("countChip").textContent = `${filtered.length} items`;
+
+      filtered.forEach(item=>{
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const cover = document.createElement("div");
+        cover.className = "cover";
+
+        const sk = document.createElement("div");
+        sk.className = "skeleton";
+        cover.appendChild(sk);
+
+        const img = document.createElement("img");
+        img.alt="image";
+        img.loading="lazy";
+        img.decoding="async";
+        img.referrerPolicy="no-referrer";
+        img.dataset.src = String(item.thumbnail||"").trim() || "";
+        cover.appendChild(img);
+
+        const st = document.createElement("div");
+        st.className="badgeStatus";
+        const style = statusStyle(item.status);
+        st.style.background = style.bg;
+        st.style.color = style.fg;
+        st.textContent = String(item.status||"").trim() || "—";
+        cover.appendChild(st);
+
+        const body = document.createElement("div");
+        body.className="body";
+
+        const row1 = document.createElement("div");
+        row1.className="row1";
+
+        const plotLine = document.createElement("div");
+        plotLine.className="plotLine";
+        plotLine.textContent = normalizePlot(item.plot) ? `PLOT : ${normalizePlot(item.plot)}` : "PLOT : -";
+
+        const price = document.createElement("div");
+        price.className="price";
+        price.textContent = fmtPrice(item.price);
+
+        row1.appendChild(plotLine);
+        row1.appendChild(price);
+
+        const meta = document.createElement("div");
+        meta.className="meta";
+        meta.appendChild(pillIcon("bed", item.bedrooms || "-", "Beds"));
+        meta.appendChild(pillIcon("bath", item.bathrooms || "-", "Baths"));
+        meta.appendChild(pillIcon("area", item.livingSqm || "-", "m²"));
+
+        const btn = document.createElement("button");
+        btn.className="btn";
+        btn.textContent="More Details";
+        btn.addEventListener("click", ()=>{
+          if(!item.id) return;
+          location.href = DETAILS_URL + encodeURIComponent(item.id) + `&project=${encodeURIComponent(PROJECT)}`;
+        });
+
+        body.appendChild(row1);
+        body.appendChild(meta);
+        body.appendChild(btn);
+
+        card.appendChild(cover);
+        card.appendChild(body);
+        grid.appendChild(card);
+      });
+
+      setupLazyImages();
     }
 
     function pickMasterVillName(list){
@@ -714,7 +606,7 @@
         if(!n) return;
         freq.set(n, (freq.get(n)||0)+1);
       });
-      let best = "", bestN = 0;
+      let best="", bestN=0;
       for(const [k,v] of freq.entries()){
         if(v>bestN){ best=k; bestN=v; }
       }
@@ -722,7 +614,7 @@
     }
 
     (function init(){
-      $("debugChip").textContent = `PJ: ${PROJECT}`;
+      $("pjChip").textContent = `PJ: ${PROJECT}`;
       $("gatewayBtn").href = `${GATEWAY_URL}?project=${encodeURIComponent(PROJECT)}`;
       showLoader(true);
       loadAll();
@@ -748,7 +640,6 @@
         }));
 
         const liveOnly = all.filter(x => isLiveSysStatus(x.sysStatus));
-
         $("masterVill").textContent = pickMasterVillName(liveOnly) || "Master Vill";
         buildPlotOptions(liveOnly);
         applyFilters();
@@ -756,8 +647,8 @@
       }catch(err){
         console.error(err);
         $("countChip").textContent = "โหลดไม่สำเร็จ";
-        toast(String(err.message || err)); // ✅ โชว์ error จริง (เช่น ไม่พบแท็บชีท)
-        $("empty").style.display = "block";
+        toast(err.message || "โหลดข้อมูลไม่สำเร็จ");
+        $("empty").style.display="block";
         showLoader(false);
       }
     }
